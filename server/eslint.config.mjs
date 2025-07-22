@@ -1,19 +1,36 @@
 import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
-import { defineConfig } from "eslint/config";
 
-export default defineConfig([
+export default [
+  // Base JavaScript configuration
+  js.configs.recommended,
+
+  // TypeScript configuration
+  ...tseslint.configs.recommended,
+
   {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
-    plugins: { js },
-    extends: ["js/recommended"],
+    files: ["**/*.{js,mjs,cjs,ts}"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.es2020,
+      },
+      ecmaVersion: 2020,
+      sourceType: "module",
+    },
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_" },
+      ],
+      "@typescript-eslint/no-explicit-any": "warn",
+      "no-console": "off", // Allow console.log in server
+    },
   },
+
+  // Ignore patterns
   {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
-    languageOptions: { globals: globals.browser },
+    ignores: ["dist/", "node_modules/", "*.config.js"],
   },
-  tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
-]);
+];
