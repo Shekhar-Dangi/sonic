@@ -24,6 +24,7 @@ export const requireAuth = async (
   }
 
   const token = authHeader.split(" ")[1];
+  console.log(token);
 
   try {
     const payload = await verifyToken(token, {

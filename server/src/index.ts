@@ -2,7 +2,10 @@ import express, { Request, Response, Application } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
-import { AuthenticatedRequest, requireAuth } from "./middleware/auth";
+import { requireAuth } from "./middleware/auth";
+
+import logsRoute from "./routes/logs";
+import { AuthenticatedRequest } from "./middleware/auth";
 
 dotenv.config();
 const app: Application = express();
@@ -16,14 +19,11 @@ app.get("/health", (req: Request, res: Response) => {
   res.send("server is healthy!");
 });
 
-app.post(
-  "/recieve",
-  requireAuth,
-  (req: AuthenticatedRequest, res: Response) => {
-    console.log(req.authUserId);
-    res.send({ id: req.authUserId });
-  }
-);
+app.use("/test", requireAuth, (req: AuthenticatedRequest, res: Response) => {
+  res.json({ message: "You're authenticated" });
+});
+
+app.use("/api/logs", logsRoute);
 
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 
