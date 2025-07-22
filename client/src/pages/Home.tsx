@@ -1,3 +1,4 @@
+import Footer from "../components/Footer";
 import Hero from "../components/Hero";
 import How from "../components/How";
 import Navbar from "../components/Navbar";
@@ -10,6 +11,7 @@ function Home() {
       <Hero />
       <How />
       <Plan />
+      <Footer />
     </>
   );
 }
