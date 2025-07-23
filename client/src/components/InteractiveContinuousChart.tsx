@@ -9,74 +9,63 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-function InteractiveContinuousChart() {
-  interface TooltipProps {
-    active?: boolean;
-    payload?: Array<{
-      payload: {
-        date: string;
-        volume: number;
-        weight: number;
-        sets: number;
-      };
-    }>;
-    label?: string;
-  }
+export interface ChartDataPoint {
+  [key: string]: string | number; // Flexible data structure
+}
 
-  const benchPressData = [
-    {
-      date: "Jan 15",
-      volume: 8400, // 140lbs × 10 reps × 6 sets
-      weight: 140,
-      sets: 6,
-    },
-    {
-      date: "Jan 17",
-      volume: 9000, // 150lbs × 10 reps × 6 sets
-      weight: 150,
-      sets: 6,
-    },
-    {
-      date: "Jan 19",
-      volume: 8800, // 145lbs × 8 reps × 7.6 sets (rounded)
-      weight: 145,
-      sets: 8,
-    },
-    {
-      date: "Jan 22",
-      volume: 9600, // 160lbs × 8 reps × 7.5 sets
-      weight: 160,
-      sets: 8,
-    },
-    {
-      date: "Jan 24",
-      volume: 10200, // 170lbs × 6 reps × 10 sets
-      weight: 170,
-      sets: 10,
-    },
-    {
-      date: "Jan 26",
-      volume: 9900, // 165lbs × 6 reps × 10 sets
-      weight: 165,
-      sets: 10,
-    },
-    {
-      date: "Jan 29",
-      volume: 11400, // 190lbs × 6 reps × 10 sets
-      weight: 190,
-      sets: 10,
-    },
-  ];
+export interface ChartConfig {
+  title: string;
+  xAxisKey: string; // Which field to use for X-axis (e.g., "date")
+  yAxisKey: string; // Which field to use for Y-axis (e.g., "volume", "weight")
+  yAxisLabel: string; // Label for Y-axis (e.g., "Volume (lbs)", "Weight (lbs)")
+  lineColor?: string; // Color of the line (optional)
+  lineName: string; // Name shown in legend (e.g., "Bench Press Volume")
+  yAxisDomain?: [string | number, string | number]; // Custom Y-axis range (optional)
+}
 
+interface InteractiveContinuousChartProps {
+  data: ChartDataPoint[];
+  config: ChartConfig;
+  tooltipFields?: string[]; // Optional: specific fields to show in tooltip
+}
+
+interface TooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    payload: ChartDataPoint;
+  }>;
+  label?: string;
+}
+
+function InteractiveContinuousChart({
+  data,
+  config,
+  tooltipFields,
+}: InteractiveContinuousChartProps) {
   const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload;
+      const dataPoint = payload[0].payload;
+
       return (
         <div className="bg-white p-3 border border-black-200 rounded-lg shadow-lg">
-          <p className="font-semibold text-black-900">{`Date: ${label}`}</p>
-          <p className="text-primary-600">{`Volume: ${data.volume.toLocaleString()} lbs`}</p>
-          <p className="text-black-700">{`Weight: ${data.weight} lbs`}</p>
-          <p className="text-black-700">{`Sets: ${data.sets}`}</p>
+          <p className="font-semibold text-black-900">{`${config.xAxisKey}: ${label}`}</p>
+          <p className="text-primary-600 font-medium">
+            {`${config.yAxisLabel}: ${
+              dataPoint[config.yAxisKey]?.toLocaleString?.() ||
+              dataPoint[config.yAxisKey]
+            }`}
+          </p>
+
+          {/* Show additional tooltip fields if specified */}
+          {tooltipFields?.map((field) =>
+            dataPoint[field] !== undefined &&
+            field !== config.xAxisKey &&
+            field !== config.yAxisKey ? (
+              <p key={field} className="text-black-700 text-sm">
+                {`${field}: ${dataPoint[field]}`}
+              </p>
+            ) : null
+          )}
         </div>
       );
     }
@@ -85,22 +74,26 @@ function InteractiveContinuousChart() {
 
   return (
     <div className="h-90 mt-16 card py-8 px-2">
+      <h3 className="text-lg font-semibold text-center mb-4 text-black-900">
+        {config.title}
+      </h3>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          data={benchPressData}
+          data={data}
           margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis
-            dataKey="date"
+            dataKey={config.xAxisKey}
             tick={{ fontSize: 12, fill: "#64748b" }}
             axisLine={{ stroke: "#cbd5e1" }}
           />
           <YAxis
             tick={{ fontSize: 12, fill: "#64748b" }}
             axisLine={{ stroke: "#cbd5e1" }}
+            domain={config.yAxisDomain || ["dataMin - 5", "dataMax + 5"]}
             label={{
-              value: "Volume (lbs)",
+              value: config.yAxisLabel,
               angle: -90,
               position: "insideLeft",
             }}
@@ -109,12 +102,16 @@ function InteractiveContinuousChart() {
           <Legend />
           <Line
             type="monotone"
-            dataKey="volume"
-            stroke="#7f5af0"
+            dataKey={config.yAxisKey}
+            stroke={config.lineColor || "#7f5af0"}
             strokeWidth={3}
-            dot={{ fill: "#7f5af0", strokeWidth: 2, r: 5 }}
-            activeDot={{ r: 7, stroke: "#7f5af0", strokeWidth: 2 }}
-            name="Bench Press Volume"
+            dot={{ fill: config.lineColor || "#7f5af0", strokeWidth: 2, r: 5 }}
+            activeDot={{
+              r: 7,
+              stroke: config.lineColor || "#7f5af0",
+              strokeWidth: 2,
+            }}
+            name={config.lineName}
           />
         </LineChart>
       </ResponsiveContainer>

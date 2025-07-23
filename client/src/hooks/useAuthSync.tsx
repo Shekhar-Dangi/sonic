@@ -6,7 +6,7 @@ export const useAuthSync = () => {
   const { isLoaded, isSignedIn, getToken } = useAuth();
   const { user: clerkUser } = useUser();
 
-  const { setUser, fetchLogs, clearStore } = useUserStore();
+  const { setUser, fetchLogs, clearStore, fetchMetrics } = useUserStore();
 
   useEffect(() => {
     if (isSignedIn && clerkUser) {
@@ -23,6 +23,7 @@ export const useAuthSync = () => {
         const token = await getToken();
         if (token) {
           fetchLogs(token);
+          fetchMetrics(token);
         }
       };
 

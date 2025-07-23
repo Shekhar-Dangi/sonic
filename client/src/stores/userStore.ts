@@ -16,6 +16,26 @@ export const useUserStore = create<UserStore>((set) => ({
     set({ isLoggedIn });
   },
 
+  fetchMetrics: async (token?: string) => {
+    set({ isLoading: true });
+    try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+      const response = await fetch("http://localhost:4000/api/metrics", {
+        headers,
+      });
+      const data = await response.json();
+      console.log(data.data.metrics);
+      set({ isLoading: false, metrics: data.data.metrics });
+    } catch (error) {
+      console.error("Error fetching logs:", error);
+      set({ isLoading: false });
+    }
+  },
   fetchLogs: async (token?: string) => {
     set({ isLoading: true });
     try {

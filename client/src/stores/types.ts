@@ -54,6 +54,7 @@ export interface UserStore {
   setUser: (user: User | null) => void;
   setLoggedIn: (isLoggedIn: boolean) => void;
   fetchLogs: (token?: string) => Promise<void>;
+  fetchMetrics: (token?: string) => Promise<void>;
   addLog: (log: WorkoutLog) => void;
   setLoading: (loading: boolean) => void;
   clearStore: () => void;
