@@ -48,6 +48,7 @@ function Plan() {
       children={plans.map((plan) => (
         <PlanCard
           key={plan.id}
+          id={plan.id}
           title={plan.title}
           price={plan.price}
           features={plan.features}

@@ -1,22 +1,24 @@
+import { useSummary } from "../hooks/useSummary";
 import InteractiveContinuousChart from "./InteractiveContinuousChart";
 import MainCard from "./MainCard";
 
 function MainDash() {
+  const { volume, duration, sessions } = useSummary();
   const stats = [
     {
       id: 1,
       title: "Volume",
-      subtitle: "234 lbs",
+      subtitle: volume ? volume + " lbs" : "0 lbs",
     },
     {
       id: 2,
-      title: "Sesssions This Week",
-      subtitle: "4",
+      title: "Sesssions",
+      subtitle: sessions ? sessions : 0,
     },
     {
       id: 3,
-      title: "PRs Hit",
-      subtitle: "2",
+      title: "Cardio Duration",
+      subtitle: duration ? duration + " hrs" : "0 hrs",
     },
   ];
   return (

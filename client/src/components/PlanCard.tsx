@@ -5,9 +5,10 @@ interface PlanCardProps {
   price: string;
   isPopular?: boolean;
   features: string[];
+  id: number;
 }
 
-function PlanCard({ title, price, isPopular, features }: PlanCardProps) {
+function PlanCard({ id, title, price, isPopular, features }: PlanCardProps) {
   return (
     <>
       <div
@@ -29,7 +30,7 @@ function PlanCard({ title, price, isPopular, features }: PlanCardProps) {
         </h3>
         <div className="mt-8">
           {features.map((feature) => (
-            <p className="flex gap-2 items-center mb-2">
+            <p key={id} className="flex gap-2 items-center mb-2">
               <img
                 src={checkmark}
                 className="bg-primary-600 rounded-full h-4 w-4 p-1"

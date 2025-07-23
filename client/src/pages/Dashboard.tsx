@@ -7,6 +7,7 @@ function Dashboard() {
   return (
     <>
       <Navbar />
+
       <div className="main-container flex justify-between">
         <SideBar />
         <MainDash />

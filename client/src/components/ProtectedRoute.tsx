@@ -1,4 +1,3 @@
-// components/ProtectedRoute.tsx
 import { useAuth } from "@clerk/clerk-react";
 import { Navigate } from "react-router";
 
@@ -15,10 +14,6 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (!isSignedIn) {
     return <Navigate to="/sign-in" replace />;
-  }
-
-  if (isSignedIn) {
-    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
