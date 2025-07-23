@@ -4,36 +4,36 @@
 
 Sonic lets you log workouts just by speaking. No typing, no fumbling with your phone between sets - just talk naturally about your workout and let our AI handle the rest.
 
-## ✨ What Makes Sonic Special
+## What Makes Sonic Special
 
-### 🎤 From Voice to Insight in Seconds
+### From Voice to Insight in Seconds
 
 - **Just Talk Naturally**: No need to learn special commands - describe your workout like you'd tell a friend
 - **Instant Understanding**: Our AI gets what you mean, whether you say "bench press" or "benching"
 - **Smart Organization**: Everything gets sorted automatically into the right categories
 - **Works Your Way**: Handle different speaking styles and fitness terminology with ease
 
-### 📊 Track Everything That Matters
+### Track Everything That Matters
 
 - **Workout Logging**: Sets, reps, weights, time - capture it all with your voice
 - **Body Metrics**: Quick weigh-ins and body composition tracking
 - **Visual Progress**: See your gains with charts that actually make sense
 - **Smart Insights**: Get weekly, monthly, and yearly summaries of your fitness journey
 
-### 🔐 Your Data, Secure & Private
+### Your Data, Secure & Private
 
 - **Rock-Solid Security**: Your workout data stays yours, protected by enterprise-grade authentication
 - **Personal Space**: Every user gets their own isolated data - no mixing, no sharing
 - **Always Protected**: Secure API endpoints ensure your information never falls into the wrong hands
 
-### 📱 Built for Real Workouts
+### Built for Real Workouts
 
 - **Works Everywhere**: From your phone in the gym to your computer at home
 - **Real-Time Feedback**: See your words turn into data as you speak
 - **Clean & Simple**: No clutter, just the features you actually need
 - **Lightning Fast**: Optimized for quick logging between sets
 
-## 🏗️ How Sonic Works
+## How Sonic Works
 
 **From voice to insight in seconds**
 
@@ -96,7 +96,7 @@ server/
 │   └── prisma/              # Database schema and migrations
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 **Ready to ditch the notepad? Let's get you set up.**
 
@@ -168,7 +168,7 @@ server/
 
 That's it! Open your browser and start talking to your workout tracker. 🎉
 
-## 🎯 Try It Out
+## Try It Out
 
 **Here's how easy it is:**
 
@@ -227,7 +227,7 @@ Sonic handles complex entries like a pro:
 - **Google Gemini AI** for understanding natural language
 - **CORS** enabled for seamless frontend-backend communication
 
-## 🧠 The AI Magic Explained
+## The AI Magic Explained
 
 **Ever wonder how Sonic "gets" what you're saying?**
 
@@ -245,7 +245,7 @@ Sonic handles complex entries like a pro:
 - **Error Recovery**: If something's unclear, it asks for clarification instead of guessing wrong
 - **Learning**: Gets better at understanding your specific way of talking over time
 
-## 📊 Charts That Actually Help
+## Charts That Actually Help
 
 **Because pretty graphs should also be useful graphs.**
 
@@ -263,7 +263,7 @@ Sonic handles complex entries like a pro:
 - **Progress Indicators**: Clear visual feedback when you're improving (or not)
 - **Pattern Recognition**: Spot trends you might miss just looking at numbers
 
-## 🤝 Want to Contribute?
+## Want to Contribute?
 
 **Found a bug? Have a cool idea? I'd love your help!**
 
@@ -274,20 +274,6 @@ Sonic handles complex entries like a pro:
 5. Push to your branch (`git push origin feature/awesome-feature`)
 6. Open a Pull Request and tell us what you built!
 
-## 📝 License
+## License
 
 This project is MIT licensed. Basically, do what you want with it.
-
-## 🙏 Big Thanks To
-
-- **Clerk** for making authentication actually enjoyable
-- **Google Gemini AI** for understanding human speech better than most humans
-- **Prisma** for making databases less painful
-- **The React Speech Recognition team** for the voice input magic
-- **Everyone who beta tested** and gave feedback to make this better
-
----
-
-**Ready to speak your workouts into existence? Let's do this! 💪**
-
-_Built with ❤️ for people who lift heavy things and want to track it without the hassle._
