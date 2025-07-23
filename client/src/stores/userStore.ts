@@ -62,6 +62,10 @@ export const useUserStore = create<UserStore>((set) => ({
     set((state) => ({ logs: [log, ...state.logs] }));
   },
 
+  addMetric: (metric) => {
+    set((state) => ({ metrics: [metric, ...state.metrics] }));
+  },
+
   setLoading: (loading) => {
     set({ isLoading: loading });
   },

@@ -41,7 +41,7 @@ export const logMetrics = async (
 
     res.status(201).json({
       message: "Metrics logged successfully!",
-      data: newMetric,
+      metric: newMetric,
     });
   } catch (error) {
     console.error("Error logging body metrics:", error);

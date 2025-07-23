@@ -7,8 +7,12 @@ import mic from "../assets/icons/mic.svg";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import { useAuth } from "@clerk/clerk-react";
+
+import { useUserStore } from "../stores/userStore";
 
 function SideBar() {
+  const { addLog, addMetric } = useUserStore();
   const sideBarItems = [
     {
       id: 1,
@@ -35,6 +39,7 @@ function SideBar() {
       icon: settings,
     },
   ];
+  const { getToken } = useAuth();
   const {
     transcript,
     listening,
@@ -61,6 +66,31 @@ function SideBar() {
       </div>
     );
   }
+
+  const sendRawData = async () => {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    const token = await getToken();
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const response = await fetch("http://localhost:4000/api/voice-log", {
+      headers,
+      method: "POST",
+      body: JSON.stringify({ transcript }),
+    });
+    const data = await response.json();
+    console.log(data);
+    if (data.session) {
+      addLog(data.session);
+    }
+    if (data.metric) {
+      addMetric(data.metric);
+    }
+  };
+
   return (
     <>
       <div className="bg-white p-8 flex-1/3 flex flex-col justify-between items-between min-h-[600px]">
@@ -110,7 +140,12 @@ function SideBar() {
           </div>
         )}
 
-        <div className="text-center cursor-pointer btn-primary">Log</div>
+        <div
+          onClick={sendRawData}
+          className="text-center cursor-pointer btn-primary"
+        >
+          Log
+        </div>
         {listening && !transcript && (
           <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
             <div className="text-xs text-blue-600 flex items-center gap-2">

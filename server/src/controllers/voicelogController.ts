@@ -359,7 +359,8 @@ Return JSON matching this EXACT schema:
     res.json({
       success: results.errors.length === 0,
       message: "Mixed content processed",
-      data: results,
+      session: results?.workout?.session,
+      metric: results?.metric?.metric,
       errors: results.errors.length > 0 ? results.errors : undefined,
     });
   } catch (error) {
