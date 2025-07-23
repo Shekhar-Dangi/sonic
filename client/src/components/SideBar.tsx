@@ -74,13 +74,13 @@ function SideBar() {
             />
           ))}
         </div>
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-2  mb-4">
           <div
             onClick={() => {
               if (listening) {
                 SpeechRecognition.stopListening();
               } else {
-                resetTranscript(); // Clear first
+                resetTranscript();
                 SpeechRecognition.startListening({
                   continuous: true,
                   language: "en-US",
@@ -90,14 +90,11 @@ function SideBar() {
             }}
             className={`${
               listening ? "bg-red-600 animate-pulse" : "bg-primary-600"
-            } flex justify-center rounded-2xl py-3 cursor-pointer flex-1 transition-all duration-200 hover:scale-105 px-4 py-1`}
+            } btn-primary flex-1 flex justify-center`}
           >
             <img className="w-6 h-6" src={mic} alt="Microphone" />
           </div>
-          <button
-            onClick={resetTranscript}
-            className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 rounded-xl text-sm transition-colors duration-200"
-          >
+          <button onClick={resetTranscript} className="flex-1 btn-secondary">
             Clear
           </button>
         </div>
@@ -113,6 +110,7 @@ function SideBar() {
           </div>
         )}
 
+        <div className="text-center cursor-pointer btn-primary">Log</div>
         {listening && !transcript && (
           <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
             <div className="text-xs text-blue-600 flex items-center gap-2">

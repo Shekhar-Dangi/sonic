@@ -6,6 +6,7 @@ import { requireAuth } from "./middleware/auth";
 
 import logsRoute from "./routes/logs";
 import metricsRoute from "./routes/metrics";
+import voiceRoute from "./routes/voicelog";
 
 import { AuthenticatedRequest } from "./middleware/auth";
 
@@ -27,6 +28,7 @@ app.use("/test", requireAuth, (req: AuthenticatedRequest, res: Response) => {
 
 app.use("/api/logs", logsRoute);
 app.use("/api/metrics", metricsRoute);
+app.use("/api/voice-log", voiceRoute);
 
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 

@@ -25,7 +25,7 @@ function MainDash() {
     {
       id: 3,
       title: "Cardio Duration",
-      subtitle: duration ? duration + " hrs" : "0 hrs",
+      subtitle: duration ? duration.toFixed(2) + " hrs" : "0 hrs",
     },
   ];
 
@@ -42,7 +42,6 @@ function MainDash() {
           ))}
         </div>
 
-        {/* Monthly Weight Chart */}
         {hasData ? (
           <InteractiveContinuousChart
             data={weightData}
