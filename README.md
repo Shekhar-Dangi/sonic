@@ -4,35 +4,6 @@
 
 Sonic lets you log workouts just by speaking. No typing, no fumbling with your phone between sets - just talk naturally about your workout and let our AI handle the rest.
 
-## What Makes Sonic Special
-
-### From Voice to Insight in Seconds
-
-- **Just Talk Naturally**: No need to learn special commands - describe your workout like you'd tell a friend
-- **Instant Understanding**: Our AI gets what you mean, whether you say "bench press" or "benching"
-- **Smart Organization**: Everything gets sorted automatically into the right categories
-- **Works Your Way**: Handle different speaking styles and fitness terminology with ease
-
-### Track Everything That Matters
-
-- **Workout Logging**: Sets, reps, weights, time - capture it all with your voice
-- **Body Metrics**: Quick weigh-ins and body composition tracking
-- **Visual Progress**: See your gains with charts that actually make sense
-- **Smart Insights**: Get weekly, monthly, and yearly summaries of your fitness journey
-
-### Your Data, Secure & Private
-
-- **Rock-Solid Security**: Your workout data stays yours, protected by enterprise-grade authentication
-- **Personal Space**: Every user gets their own isolated data - no mixing, no sharing
-- **Always Protected**: Secure API endpoints ensure your information never falls into the wrong hands
-
-### Built for Real Workouts
-
-- **Works Everywhere**: From your phone in the gym to your computer at home
-- **Real-Time Feedback**: See your words turn into data as you speak
-- **Clean & Simple**: No clutter, just the features you actually need
-- **Lightning Fast**: Optimized for quick logging between sets
-
 ## How Sonic Works
 
 **From voice to insight in seconds**
@@ -168,34 +139,6 @@ server/
 
 That's it! Open your browser and start talking to your workout tracker. 🎉
 
-## Try It Out
-
-**Here's how easy it is:**
-
-### Logging Workouts
-
-Just hit the mic button and say things like:
-
-- _"I did bench press today, 3 sets of 8 reps at 185 pounds"_
-- _"Ran 3 miles in 25 minutes, then did push-ups, about 50 total"_
-- _"Squats: 5 sets of 5 at 225 pounds"_
-
-### Tracking Body Stats
-
-Quick check-ins work too:
-
-- _"I weigh 175 pounds today"_
-- _"Weighed myself this morning, 178.5 pounds, body fat 15.2%"_
-- _"Body weight 180, muscle mass 45 pounds"_
-
-### Mix It Up
-
-Sonic handles complex entries like a pro:
-
-- _"I weigh 175 today and did squats, 5 sets of 5 at 225"_
-
-**The best part?** Sonic understands natural speech. Talk however feels comfortable - no robot commands needed.
-
 ### API Endpoints
 
 #### Authentication Required
@@ -226,42 +169,6 @@ Sonic handles complex entries like a pro:
 - **Clerk** authentication middleware
 - **Google Gemini AI** for understanding natural language
 - **CORS** enabled for seamless frontend-backend communication
-
-## The AI Magic Explained
-
-**Ever wonder how Sonic "gets" what you're saying?**
-
-### The Voice Processing Journey
-
-1. **You Speak** → Your browser captures the audio and converts it to text
-2. **AI Analyzes** → Gemini AI figures out if you're talking about workouts, body stats, or both
-3. **Data Gets Structured** → Natural language becomes organized fitness data
-4. **Everything's Saved** → Your info gets stored securely with all the right connections
-
-### Smart AI Features
-
-- **Context Understanding**: Knows the difference between "I did 3 sets" vs "I weigh 3 times what I should"
-- **Flexible Language**: Whether you say "bench press," "benching," or "BP" - it gets it
-- **Error Recovery**: If something's unclear, it asks for clarification instead of guessing wrong
-- **Learning**: Gets better at understanding your specific way of talking over time
-
-## Charts That Actually Help
-
-**Because pretty graphs should also be useful graphs.**
-
-### What You Can Visualize
-
-- **Progress Over Time**: See your strength gains, weight changes, or any metric you're tracking
-- **Custom Comparisons**: Want to see if your squat correlates with your body weight? Easy.
-- **Flexible Time Ranges**: Last week, last month, last year, or any custom period
-- **Multiple Chart Types**: Line graphs, scatter plots, whatever shows your data best
-
-### Smart Insights You'll Actually Use
-
-- **Volume Tracking**: How much total weight you're moving over time
-- **Consistency Metrics**: Are you actually sticking to your routine?
-- **Progress Indicators**: Clear visual feedback when you're improving (or not)
-- **Pattern Recognition**: Spot trends you might miss just looking at numbers
 
 ## Want to Contribute?
 
