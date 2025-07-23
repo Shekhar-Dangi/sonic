@@ -5,6 +5,8 @@ import { clerkMiddleware } from "@clerk/express";
 import { requireAuth } from "./middleware/auth";
 
 import logsRoute from "./routes/logs";
+import metricsRoute from "./routes/metrics";
+
 import { AuthenticatedRequest } from "./middleware/auth";
 
 dotenv.config();
@@ -24,6 +26,7 @@ app.use("/test", requireAuth, (req: AuthenticatedRequest, res: Response) => {
 });
 
 app.use("/api/logs", logsRoute);
+app.use("/api/metrics", metricsRoute);
 
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 
