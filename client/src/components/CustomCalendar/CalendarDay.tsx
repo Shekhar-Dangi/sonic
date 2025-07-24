@@ -35,7 +35,7 @@ export default function CalendarDay({
   return (
     <div
       className={`
-        aspect-square w-full flex items-center justify-center cursor-pointer text-sm font-medium transition-colors rounded-full
+        aspect-square 3xl:w-full flex items-center justify-center cursor-pointer text-sm font-medium transition-colors rounded-full
         ${getIntensityStyle()}
         ${isToday ? "ring-2 ring-primary-300" : ""}
         ${!isCurrentMonth ? "opacity-50" : ""}

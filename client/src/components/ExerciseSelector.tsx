@@ -38,7 +38,7 @@ const ExerciseSelector = ({ className = "" }: ExerciseSelectorProps) => {
   }
 
   return (
-    <div className={`p-4 card ${className}`}>
+    <div className={`p-4 card ${className} h-auto`}>
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">

@@ -53,7 +53,7 @@ export default function Calendar({
   };
 
   return (
-    <div className="card p-4">
+    <div className="card p-4 ">
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={goToPreviousMonth}

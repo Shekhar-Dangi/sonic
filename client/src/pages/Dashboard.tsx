@@ -6,6 +6,7 @@ import SideBar from "../components/SideBar";
 import LogsPage from "../components/LogsPage";
 import InsightsPage from "../components/InsightsPage";
 import SettingsPage from "../components/SettingsPage";
+import VoiceLogPage from "../components/VoiceLogPage";
 import { useDashboardStore } from "../stores/dashboardStore";
 
 function Dashboard() {
@@ -36,6 +37,8 @@ function Dashboard() {
         );
       case "settings":
         return <SettingsPage />;
+      case "voicelog":
+        return <VoiceLogPage />;
       default:
         return (
           <>
@@ -50,7 +53,7 @@ function Dashboard() {
     <>
       <Navbar />
 
-      <div className="min-h-[70vh] main-container flex justify-between">
+      <div className="main-container flex flex-col 3xl:flex-row justify-between gap-16 3xl:gap-0">
         <SideBar />
         {renderMainContent()}
       </div>

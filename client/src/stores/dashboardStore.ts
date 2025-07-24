@@ -7,7 +7,8 @@ export type DashboardLocation =
   | "dashboard"
   | "logs"
   | "insights"
-  | "settings";
+  | "settings"
+  | "voicelog";
 
 export type ExerciseMetricType = "weight" | "duration" | "reps";
 

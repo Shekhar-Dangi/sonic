@@ -46,8 +46,8 @@ function MainDash() {
 
   return (
     <>
-      <div className="flex-1/1 px-8">
-        <div className="flex justify-between gap-4 ">
+      <div className="flex-1/1  px-8 flex gap-16 flex-col">
+        <div className="flex justify-between md-lg:flex-row flex-col gap-4 ">
           {stats.map((stat) => (
             <MainCard
               key={stat.id}
@@ -56,51 +56,52 @@ function MainDash() {
             />
           ))}
         </div>
-
-        {hasData ? (
-          <InteractiveContinuousChart
-            data={weightData}
-            config={weightConfig}
-            tooltipFields={["date", "weight", "bodyFat", "muscleMass"]}
-          />
-        ) : (
-          <div className="h-90 mt-16 card py-8 px-2 flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <p className="text-lg font-medium">
-                No weight data for this month
-              </p>
-              <p className="text-sm">
-                Start logging your body metrics to see progress!
-              </p>
+        <div className="flex flex-col md-lg:flex-row 3xl:flex-col gap-8">
+          {hasData ? (
+            <InteractiveContinuousChart
+              data={weightData}
+              config={weightConfig}
+              tooltipFields={["date", "weight", "bodyFat", "muscleMass"]}
+            />
+          ) : (
+            <div className="h-90 mt-16 card py-8 px-2 flex items-center justify-center flex-1">
+              <div className="text-center text-gray-500">
+                <p className="text-lg font-medium">
+                  No weight data for this month
+                </p>
+                <p className="text-sm">
+                  Start logging your body metrics to see progress!
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {hasExerciseData ? (
-          <InteractiveContinuousChart
-            data={exerciseData}
-            config={exerciseConfig}
-            tooltipFields={[
-              "date",
-              selectedMetricType,
-              "exerciseName",
-              "totalSets",
-              "totalVolume",
-            ]}
-          />
-        ) : (
-          <div className="h-90 mt-16 card py-8 px-2 flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <p className="text-lg font-medium">
-                No {selectedExercise || "exercise"} data for this month
-              </p>
-              <p className="text-sm">
-                Start logging {selectedExercise || "workout"} sessions to see
-                progress!
-              </p>
+          {hasExerciseData ? (
+            <InteractiveContinuousChart
+              data={exerciseData}
+              config={exerciseConfig}
+              tooltipFields={[
+                "date",
+                selectedMetricType,
+                "exerciseName",
+                "totalSets",
+                "totalVolume",
+              ]}
+            />
+          ) : (
+            <div className="h-90 mt-16 card py-8 px-2 flex items-center justify-center flex-1">
+              <div className="text-center text-gray-500">
+                <p className="text-lg font-medium">
+                  No {selectedExercise || "exercise"} data for this month
+                </p>
+                <p className="text-sm">
+                  Start logging {selectedExercise || "workout"} sessions to see
+                  progress!
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </>
   );

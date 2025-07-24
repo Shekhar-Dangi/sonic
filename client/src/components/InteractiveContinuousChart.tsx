@@ -73,7 +73,7 @@ function InteractiveContinuousChart({
   };
 
   return (
-    <div className="h-90 mt-16 card py-8 px-2">
+    <div className="h-90 card py-8 px-2 md-lg:flex-1 3xl:flex-none">
       <h3 className="text-lg font-semibold text-center mb-4 text-black-900">
         {config.title}
       </h3>

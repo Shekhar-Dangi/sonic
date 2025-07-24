@@ -1,7 +1,9 @@
+import { useState, useEffect } from "react";
 import home from "../assets/icons/home.svg";
 import logs from "../assets/icons/logs.png";
 import insights from "../assets/icons/insights.png";
 import settings from "../assets/icons/settings.svg";
+import micIcon from "../assets/icons/bmic.png";
 import SideBarFile from "./SideBarFile";
 import mic from "../assets/icons/mic.svg";
 import SpeechRecognition, {
@@ -16,6 +18,19 @@ import { useDashboardStore } from "../stores/dashboardStore";
 function SideBar() {
   const { addLog, addMetric } = useUserStore();
   const { currentLocation, setCurrentLocation } = useDashboardStore();
+
+  // Track screen size for responsive voice log visibility
+  const [isLarge3xl, setIsLarge3xl] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsLarge3xl(window.innerWidth >= 1300); // 3xl breakpoint
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   const sideBarItems = [
     {
@@ -46,6 +61,15 @@ function SideBar() {
       icon: settings,
       location: "settings" as const,
     },
+    // Voice Log item only visible on screens smaller than 3xl
+    {
+      id: 5,
+      title: "Voice Log",
+      isFocused: currentLocation === "voicelog",
+      icon: micIcon,
+      location: "voicelog" as const,
+      hideOn3xl: true, // Special flag to hide on 3xl+
+    },
   ];
 
   const handleNavClick = (location: (typeof sideBarItems)[0]["location"]) => {
@@ -62,17 +86,25 @@ function SideBar() {
 
   if (!browserSupportsSpeechRecognition) {
     return (
-      <div className="bg-white p-8 flex-1/3 flex flex-col justify-between items-between min-h-[600px]">
-        <div className="flex flex-col gap-4">
-          {sideBarItems.map((item) => (
-            <SideBarFile
-              key={item.id}
-              title={item.title}
-              icon={item.icon}
-              isFocussed={item.isFocused}
-              onClick={() => handleNavClick(item.location)}
-            />
-          ))}
+      <div className="bg-white p-8 flex-1/3 flex flex-col justify-between items-between min-h-[600px] mt-0">
+        <div className="flex flex-row 3xl:flex-col justify-center gap-4 mt-0">
+          {sideBarItems
+            .filter((item) => {
+              // Hide voice log on 3xl+ screens, and also hide if speech not supported
+              if (item.hideOn3xl) {
+                return false; // Don't show voice log if speech recognition not supported
+              }
+              return true;
+            })
+            .map((item) => (
+              <SideBarFile
+                key={item.id}
+                title={item.title}
+                icon={item.icon}
+                isFocussed={item.isFocused}
+                onClick={() => handleNavClick(item.location)}
+              />
+            ))}
         </div>
         <div className="text-center text-red-500 text-sm">
           Speech recognition not supported in this browser
@@ -107,19 +139,27 @@ function SideBar() {
 
   return (
     <>
-      <div className="bg-white p-8 flex-1/3 flex flex-col justify-between items-between max-h-[600px]">
-        <div className="flex flex-col gap-4">
-          {sideBarItems.map((item) => (
-            <SideBarFile
-              key={item.id}
-              title={item.title}
-              icon={item.icon}
-              isFocussed={item.isFocused}
-              onClick={() => handleNavClick(item.location)}
-            />
-          ))}
+      <div className="bg-white p-4 rounded-lg main-container 3xl:p-16 gap-8 flex-1/3 flex flex-col justify-between items-between  max-h-[600px] mt-0">
+        <div className="flex flex-row 3xl:flex-col justify-center gap-4">
+          {sideBarItems
+            .filter((item) => {
+              // Hide voice log on 3xl+ screens
+              if (item.hideOn3xl) {
+                return !isLarge3xl;
+              }
+              return true;
+            })
+            .map((item) => (
+              <SideBarFile
+                key={item.id}
+                title={item.title}
+                icon={item.icon}
+                isFocussed={item.isFocused}
+                onClick={() => handleNavClick(item.location)}
+              />
+            ))}
         </div>
-        <div className="flex gap-2  mb-4">
+        <div className="flex-col gap-2 hidden 3xl:flex  ">
           <div
             onClick={() => {
               if (listening) {
@@ -145,7 +185,7 @@ function SideBar() {
         </div>
 
         {transcript && (
-          <div className="p-3 bg-gray-50 rounded-lg border">
+          <div className="hidden 3xl:block p-3 bg-gray-50 rounded-lg border">
             <div className="text-xs text-gray-400 uppercase tracking-wide mb-1">
               Voice Input
             </div>
@@ -157,7 +197,7 @@ function SideBar() {
 
         <div
           onClick={sendRawData}
-          className="text-center cursor-pointer btn-primary"
+          className="hidden 3xl:block ex mx-auto text-center cursor-pointer btn-primary"
         >
           Log
         </div>

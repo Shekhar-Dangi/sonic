@@ -16,7 +16,7 @@ function SideBarFile({ icon, title, isFocussed, onClick }: FileProps) {
       >
         <img className="w-5 h-5" src={icon} />
         <h5
-          className={`${
+          className={`hidden 3xl:block ${
             isFocussed ? "text-primary-500 font-semibold" : "text-black-700"
           }`}
         >
