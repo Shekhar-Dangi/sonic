@@ -11,6 +11,7 @@ function VoiceLogPage() {
   const { addLog, addMetric } = useUserStore();
   const { getToken } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isListening, setIsListening] = useState(false);
 
   const {
     transcript,
@@ -20,19 +21,25 @@ function VoiceLogPage() {
   } = useSpeechRecognition();
 
   const handleStartListening = () => {
-    console.log("clicked");
-    if (listening) {
+    console.log("clicked", { listening, isListening });
+
+    if (listening || isListening) {
       SpeechRecognition.stopListening();
+      setIsListening(false);
+      console.log("Stopping speech recognition");
     } else {
       resetTranscript();
+      setIsListening(true);
       try {
         SpeechRecognition.startListening({
           continuous: true,
           language: "en-US",
           interimResults: true,
         });
+        console.log("Starting speech recognition");
       } catch (error) {
         console.error("Speech recognition error:", error);
+        setIsListening(false);
         alert(
           "Speech recognition failed. Please check if you're using HTTPS and have microphone permissions."
         );
@@ -42,6 +49,7 @@ function VoiceLogPage() {
 
   const handleClearTranscript = () => {
     SpeechRecognition.stopListening();
+    setIsListening(false);
     resetTranscript();
   };
 
@@ -50,10 +58,10 @@ function VoiceLogPage() {
 
     setIsProcessing(true);
 
-    // Stop listening and clear transcript immediately to prevent accumulation
     SpeechRecognition.stopListening();
-    const currentTranscript = transcript; // Save current transcript
-    resetTranscript(); // Clear immediately
+    setIsListening(false);
+    const currentTranscript = transcript;
+    resetTranscript();
 
     try {
       const headers: Record<string, string> = {
@@ -114,7 +122,7 @@ function VoiceLogPage() {
               onClick={handleStartListening}
               disabled={isProcessing}
               className={`w-20 h-20 rounded-full transition-all duration-200 flex items-center justify-center mx-auto ${
-                listening
+                listening || isListening
                   ? "bg-red-500 text-white animate-pulse scale-110"
                   : "bg-primary-600 hover:bg-primary-700 text-white"
               } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
@@ -122,7 +130,9 @@ function VoiceLogPage() {
               <img src={mic} alt="Microphone" className="w-8 h-8" />
             </button>
             <p className="text-sm text-gray-600 mt-3 font-medium">
-              {listening ? "Listening..." : "Tap to start recording"}
+              {listening || isListening
+                ? "Listening... (tap to stop)"
+                : "Tap to start recording"}
             </p>
           </div>
 
@@ -157,7 +167,7 @@ function VoiceLogPage() {
           )}
 
           {/* Listening Indicator */}
-          {listening && !transcript && (
+          {(listening || isListening) && !transcript && (
             <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
               <div className="text-sm text-blue-600 flex items-center gap-2 justify-center">
                 <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
