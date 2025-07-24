@@ -1,21 +1,36 @@
 import { useSummary } from "../hooks/useSummary";
-import { useMetricChart } from "../hooks/useMonthlyWeightChart";
+import { useMetricChart } from "../hooks/useMetricChart";
+import { useExerciseChart } from "../hooks/useExerciseChart";
+import { useDashboardSync } from "../hooks/useDashboardSync";
 import InteractiveContinuousChart from "./InteractiveContinuousChart";
 import MainCard from "./MainCard";
 
 function MainDash() {
   const { volume, duration, sessions } = useSummary();
+
+  const { selectedExercise, selectedMetricType } = useDashboardSync();
+
   const {
     data: weightData,
     config: weightConfig,
     hasData,
   } = useMetricChart("weight", "month");
 
+  const {
+    data: exerciseData,
+    config: exerciseConfig,
+    hasData: hasExerciseData,
+  } = useExerciseChart(
+    selectedExercise || "bench press",
+    selectedMetricType,
+    "month"
+  );
+
   const stats = [
     {
       id: 1,
       title: "Volume",
-      subtitle: volume ? volume + " lbs" : "0 lbs",
+      subtitle: volume ? parseInt(volume.toString()) + " lbs" : "0 lbs",
     },
     {
       id: 2,
@@ -56,6 +71,32 @@ function MainDash() {
               </p>
               <p className="text-sm">
                 Start logging your body metrics to see progress!
+              </p>
+            </div>
+          </div>
+        )}
+
+        {hasExerciseData ? (
+          <InteractiveContinuousChart
+            data={exerciseData}
+            config={exerciseConfig}
+            tooltipFields={[
+              "date",
+              selectedMetricType,
+              "exerciseName",
+              "totalSets",
+              "totalVolume",
+            ]}
+          />
+        ) : (
+          <div className="h-90 mt-16 card py-8 px-2 flex items-center justify-center">
+            <div className="text-center text-gray-500">
+              <p className="text-lg font-medium">
+                No {selectedExercise || "exercise"} data for this month
+              </p>
+              <p className="text-sm">
+                Start logging {selectedExercise || "workout"} sessions to see
+                progress!
               </p>
             </div>
           </div>

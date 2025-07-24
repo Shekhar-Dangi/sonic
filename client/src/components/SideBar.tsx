@@ -7,38 +7,51 @@ import mic from "../assets/icons/mic.svg";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+
 import { useAuth } from "@clerk/clerk-react";
 
 import { useUserStore } from "../stores/userStore";
+import { useDashboardStore } from "../stores/dashboardStore";
 
 function SideBar() {
   const { addLog, addMetric } = useUserStore();
+  const { currentLocation, setCurrentLocation } = useDashboardStore();
+
   const sideBarItems = [
     {
       id: 1,
       title: "Dashboard",
-      isFocusse: true,
+      isFocused: currentLocation === "dashboard",
       icon: home,
+      location: "dashboard" as const,
     },
     {
       id: 2,
       title: "Logs",
-      isFocusse: false,
+      isFocused: currentLocation === "logs",
       icon: logs,
+      location: "logs" as const,
     },
     {
       id: 3,
       title: "Insights",
-      isFocusse: false,
+      isFocused: currentLocation === "insights",
       icon: insights,
+      location: "insights" as const,
     },
     {
       id: 4,
       title: "Settings",
-      isFocusse: false,
+      isFocused: currentLocation === "settings",
       icon: settings,
+      location: "settings" as const,
     },
   ];
+
+  const handleNavClick = (location: (typeof sideBarItems)[0]["location"]) => {
+    setCurrentLocation(location);
+  };
+
   const { getToken } = useAuth();
   const {
     transcript,
@@ -56,7 +69,8 @@ function SideBar() {
               key={item.id}
               title={item.title}
               icon={item.icon}
-              isFocussed={item.isFocusse}
+              isFocussed={item.isFocused}
+              onClick={() => handleNavClick(item.location)}
             />
           ))}
         </div>
@@ -93,14 +107,15 @@ function SideBar() {
 
   return (
     <>
-      <div className="bg-white p-8 flex-1/3 flex flex-col justify-between items-between min-h-[600px]">
+      <div className="bg-white p-8 flex-1/3 flex flex-col justify-between items-between max-h-[600px]">
         <div className="flex flex-col gap-4">
           {sideBarItems.map((item) => (
             <SideBarFile
               key={item.id}
               title={item.title}
               icon={item.icon}
-              isFocussed={item.isFocusse}
+              isFocussed={item.isFocused}
+              onClick={() => handleNavClick(item.location)}
             />
           ))}
         </div>

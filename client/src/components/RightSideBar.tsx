@@ -1,4 +1,5 @@
 import Calendar from "./CustomCalendar/Calendar";
+import ExerciseSelector from "./ExerciseSelector";
 import { useUserStore } from "../stores/userStore";
 import { useCalendarData } from "../hooks/useCalendarData";
 
@@ -13,13 +14,14 @@ function RightSideBar() {
 
   return (
     <>
-      <div className="flex-3/7">
+      <div className="flex-3/7 space-y-6">
         <Calendar
           data={calendarData}
           canGoToNextMonth={canGoToNextMonth}
           formatDateKey={formatDateKey}
           onDateClick={handleDateClick}
         />
+        <ExerciseSelector />
       </div>
     </>
   );

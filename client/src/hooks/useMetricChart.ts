@@ -20,9 +20,9 @@ export const useMetricChart = (
     xParam: "date",
     yParam: yParam,
     timeRange: timeRange,
-    chartTitle: "Weight Progress (This Month)",
-    yAxisLabel: "Weight (lbs)",
+    chartTitle: `${yParam.charAt(0).toUpperCase() + yParam.slice(1)} Progress`,
+    yAxisLabel: `${yParam.charAt(0).toUpperCase() + yParam.slice(1)}`,
     lineColor: "#7f5af0",
-    lineName: "Weight",
+    lineName: yParam.charAt(0).toUpperCase() + yParam.slice(1),
   });
 };

@@ -2,12 +2,14 @@ interface FileProps {
   icon: string;
   title: string;
   isFocussed: boolean;
+  onClick?: () => void;
 }
 
-function SideBarFile({ icon, title, isFocussed }: FileProps) {
+function SideBarFile({ icon, title, isFocussed, onClick }: FileProps) {
   return (
     <>
       <div
+        onClick={onClick}
         className={`flex gap-3 ${
           isFocussed ? "bg-primary-300" : ""
         } px-4 py-2 rounded-sm cursor-pointer hover:bg-primary-300 hover:text-primary-400 transition-colors duration-200`}

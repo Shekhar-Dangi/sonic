@@ -1,7 +1,6 @@
-import type { Metric } from "../stores/types";
+import type { Metric, WorkoutLog } from "../stores/types";
 import type { ChartDataPoint } from "../components/InteractiveContinuousChart";
 
-// Generic time filtering function
 export const filterByTimeRange = <T extends { date: string | Date }>(
   data: T[],
   timeRange: "week" | "month" | "year" | "custom",
@@ -86,6 +85,114 @@ export const transformMetricsForChart = (
       chartPoint.sortDate = new Date(metric.date).getTime();
       return chartPoint;
     })
+    .sort((a, b) => (a.sortDate as number) - (b.sortDate as number))
+    .map((item) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { sortDate, ...rest } = item;
+      return rest;
+    });
+};
+
+export const transformLogsForChart = (
+  logs: WorkoutLog[],
+  xParam: keyof WorkoutLog,
+  exerciseName: string,
+  metricType: "weight" | "duration" | "reps" = "weight",
+  timeRange: "week" | "month" | "year" | "custom",
+  customRange?: { start: Date; end: Date }
+): ChartDataPoint[] => {
+  const filteredLogs = filterByTimeRange(logs, timeRange, customRange);
+
+  const validLogs = filteredLogs.filter(
+    (log) => log[xParam] !== null && log[xParam] !== undefined
+  );
+
+  // Transform logs to chart data points
+  return validLogs
+    .map((log) => {
+      // Find the specific exercise in this workout session
+      const exercise = log.exercises.find(
+        (ex) => ex.name.toLowerCase() === exerciseName.toLowerCase()
+      );
+
+      if (!exercise || !exercise.sets || exercise.sets.length === 0) {
+        return null; // Skip if exercise not found or no sets
+      }
+
+      const chartPoint: ChartDataPoint = {};
+
+      // Handle date fields specially for x-axis
+      if (xParam === "date") {
+        chartPoint[xParam] = new Date(
+          log[xParam] as string | Date
+        ).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        });
+      } else {
+        chartPoint[xParam] = log[xParam] as string | number;
+      }
+
+      // Calculate the metric value from exercise sets
+      let metricValue: number = 0;
+
+      switch (metricType) {
+        case "weight":
+          // Get the maximum weight used in any set
+          metricValue = Math.max(
+            ...exercise.sets
+              .filter((set) => set.weight !== null && set.weight !== undefined)
+              .map((set) => set.weight as number)
+          );
+          break;
+        case "duration":
+          // Sum total duration across all sets
+          metricValue = exercise.sets
+            .filter(
+              (set) => set.duration !== null && set.duration !== undefined
+            )
+            .reduce((sum, set) => sum + (set.duration as number), 0);
+          break;
+        case "reps":
+          // Get the maximum reps in any set
+          metricValue = Math.max(
+            ...exercise.sets
+              .filter((set) => set.reps !== null && set.reps !== undefined)
+              .map((set) => set.reps as number)
+          );
+          break;
+        default:
+          metricValue = 0;
+      }
+
+      // Skip if no valid metric value found
+      if (!isFinite(metricValue) || metricValue === 0) {
+        return null;
+      }
+
+      chartPoint[metricType] = metricValue;
+
+      // Add additional fields for tooltip
+      chartPoint.exerciseName = exercise.name;
+      chartPoint.category = exercise.category;
+      chartPoint.totalSets = exercise.sets.length;
+
+      // Calculate total volume if weight and reps are available
+      const totalVolume = exercise.sets
+        .filter((set) => set.weight && set.reps)
+        .reduce(
+          (sum, set) => sum + (set.weight as number) * (set.reps as number),
+          0
+        );
+
+      if (totalVolume > 0) {
+        chartPoint.totalVolume = totalVolume;
+      }
+
+      chartPoint.sortDate = new Date(log.date).getTime();
+      return chartPoint;
+    })
+    .filter((point): point is ChartDataPoint => point !== null) // Remove null entries
     .sort((a, b) => (a.sortDate as number) - (b.sortDate as number))
     .map((item) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
