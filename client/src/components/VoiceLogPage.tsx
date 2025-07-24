@@ -20,15 +20,23 @@ function VoiceLogPage() {
   } = useSpeechRecognition();
 
   const handleStartListening = () => {
+    console.log("clicked");
     if (listening) {
       SpeechRecognition.stopListening();
     } else {
       resetTranscript();
-      SpeechRecognition.startListening({
-        continuous: true,
-        language: "en-US",
-        interimResults: true,
-      });
+      try {
+        SpeechRecognition.startListening({
+          continuous: true,
+          language: "en-US",
+          interimResults: true,
+        });
+      } catch (error) {
+        console.error("Speech recognition error:", error);
+        alert(
+          "Speech recognition failed. Please check if you're using HTTPS and have microphone permissions."
+        );
+      }
     }
   };
 
@@ -83,7 +91,7 @@ function VoiceLogPage() {
           <div className="text-red-500 text-lg font-medium mb-2">
             Speech Recognition Not Supported
           </div>
-          <p className="text-gray-600">
+          <p className="text-gray-600 mb-4">
             Your browser doesn't support speech recognition. Please try a
             different browser.
           </p>
