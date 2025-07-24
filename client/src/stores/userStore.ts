@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { UserStore } from "./types";
+import { createApiUrl } from "../lib/api";
 
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
@@ -25,11 +26,10 @@ export const useUserStore = create<UserStore>((set) => ({
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
       }
-      const response = await fetch("http://localhost:4000/api/metrics", {
+      const response = await fetch(createApiUrl("/api/metrics"), {
         headers,
       });
       const data = await response.json();
-      console.log(data.data.metrics);
       set({ isLoading: false, metrics: data.data.metrics });
     } catch (error) {
       console.error("Error fetching logs:", error);
@@ -47,7 +47,7 @@ export const useUserStore = create<UserStore>((set) => ({
         headers["Authorization"] = `Bearer ${token}`;
       }
 
-      const response = await fetch("http://localhost:4000/api/logs", {
+      const response = await fetch(createApiUrl("/api/logs"), {
         headers,
       });
       const data = await response.json();

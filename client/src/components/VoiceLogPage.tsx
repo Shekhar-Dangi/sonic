@@ -5,6 +5,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { useAuth } from "@clerk/clerk-react";
 import { useUserStore } from "../stores/userStore";
+import { createApiUrl } from "../lib/api";
 
 function VoiceLogPage() {
   const { addLog, addMetric } = useUserStore();
@@ -55,13 +56,12 @@ function VoiceLogPage() {
         headers["Authorization"] = `Bearer ${token}`;
       }
 
-      const response = await fetch("http://localhost:4000/api/voice-log", {
+      const response = await fetch(createApiUrl("/api/voice-log"), {
         headers,
         method: "POST",
         body: JSON.stringify({ transcript: currentTranscript }),
       });
       const data = await response.json();
-      console.log(data);
 
       if (data.session) {
         addLog(data.session);

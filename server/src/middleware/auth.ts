@@ -24,7 +24,6 @@ export const requireAuth = async (
   }
 
   const token = authHeader.split(" ")[1];
-  console.log(token);
   try {
     const payload = await verifyToken(token, {
       secretKey: process.env.CLERK_SECRET_KEY!,

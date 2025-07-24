@@ -14,6 +14,7 @@ import { useAuth } from "@clerk/clerk-react";
 
 import { useUserStore } from "../stores/userStore";
 import { useDashboardStore } from "../stores/dashboardStore";
+import { createApiUrl } from "../lib/api";
 
 function SideBar() {
   const { addLog, addMetric } = useUserStore();
@@ -122,7 +123,7 @@ function SideBar() {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const response = await fetch("http://localhost:4000/api/voice-log", {
+    const response = await fetch(createApiUrl("/api/voice-log"), {
       headers,
       method: "POST",
       body: JSON.stringify({ transcript }),
