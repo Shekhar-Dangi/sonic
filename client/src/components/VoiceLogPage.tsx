@@ -20,18 +20,18 @@ function VoiceLogPage() {
     resetTranscript,
   } = useSpeechRecognition();
 
-  const handleStartListening = () => {
+  const handleStartListening = async () => {
     console.log("clicked", { listening, isListening });
 
     if (listening || isListening) {
-      SpeechRecognition.stopListening();
+      await SpeechRecognition.stopListening();
       setIsListening(false);
       console.log("Stopping speech recognition");
     } else {
       resetTranscript();
       setIsListening(true);
       try {
-        SpeechRecognition.startListening({
+        await SpeechRecognition.startListening({
           continuous: true,
           language: "en-US",
           interimResults: true,
