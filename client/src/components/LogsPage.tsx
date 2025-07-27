@@ -21,7 +21,7 @@ const LogsPage = () => {
 
   if (recentLogs.length === 0) {
     return (
-      <div className="flex-1/1 px-8 py-12">
+      <div className="flex-1/1 py-12">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Recent Logs</h1>
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
@@ -60,7 +60,7 @@ const LogsPage = () => {
   }
 
   return (
-    <div className="flex-1/1 px-8 mb-8">
+    <div className="flex-1/1 mb-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Recent Logs</h1>
         <p className="text-gray-600">Your last 10 workout sessions</p>
