@@ -28,7 +28,6 @@ function Dashboard() {
         return (
           <>
             <LogsPage />
-            <RightSideBar />
           </>
         );
       case "insights":
@@ -60,9 +59,13 @@ function Dashboard() {
         <Navbar />
         <div className="main-container flex flex-col 3xl:flex-row justify-between gap-16 3xl:gap-0 m-auto p-0 ">
           {renderMainContent()}
-          <div className="3xl:hidden block">
-            <WorkoutStreak workoutSessions={logs} />
-          </div>
+          {currentLocation === "dashboard" ? (
+            <div className="3xl:hidden block">
+              <WorkoutStreak workoutSessions={logs} />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
 
         <Footer />

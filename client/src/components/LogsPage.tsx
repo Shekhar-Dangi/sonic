@@ -3,7 +3,6 @@ import { useUserStore } from "../stores/userStore";
 const LogsPage = () => {
   const { logs } = useUserStore();
 
-  // Get the 10 most recent logs
   const recentLogs = logs
     .slice()
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -18,11 +17,6 @@ const LogsPage = () => {
       hour: "2-digit",
       minute: "2-digit",
     });
-  };
-
-  const formatDuration = (duration?: number) => {
-    if (!duration) return "N/A";
-    return `${duration}hrs`;
   };
 
   if (recentLogs.length === 0) {
@@ -66,80 +60,92 @@ const LogsPage = () => {
   }
 
   return (
-    <div className="flex-1/1 px-8 py-6">
+    <div className="flex-1/1 px-8 mb-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Recent Logs</h1>
         <p className="text-gray-600">Your last 10 workout sessions</p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {recentLogs.map((log) => (
           <div
             key={log.id}
             className="card p-6 hover:shadow-lg transition-shadow"
           >
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {formatDate(log.date)}
-                </h3>
-                <div className="flex items-center gap-4 text-sm text-gray-500 mt-1">
-                  <span>Duration: {formatDuration(log.duration)}</span>
-                  <span>•</span>
-                  <span>
-                    {log.exercises.length} exercise
-                    {log.exercises.length !== 1 ? "s" : ""}
-                  </span>
-                </div>
+            <div className="flex justify-between items-center mb-4">
+              <div className="text-sm text-gray-600">
+                {formatDate(log.date)}
               </div>
-              <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
+              <div className="bg-green-100 text-green-700 px-3 py-1 rounded-md text-xs font-medium">
                 Completed
               </div>
             </div>
 
             {log.note && (
-              <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-700">
-                  <span className="font-medium">Note:</span> {log.note}
-                </p>
+              <div className="mb-6">
+                <p className="text-gray-700 italic">"{log.note}"</p>
               </div>
             )}
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {log.exercises.map((exercise, index) => (
-                <div key={index} className="border-l-4 border-blue-200 pl-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="font-medium text-gray-900">
-                        {exercise.name}
-                      </h4>
-                      <p className="text-sm text-gray-500 capitalize">
-                        {exercise.category}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-900">
-                        {exercise.sets.length} set
-                        {exercise.sets.length !== 1 ? "s" : ""}
-                      </p>
-                    </div>
+                <div key={index} className="flex items-start gap-3">
+                  <div className="flex-shrink-0 mt-1">
+                    {exercise.category === "strength" ? (
+                      <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4 text-purple-600"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M17.5 2h-15C1.67 2 1 2.67 1 3.5S1.67 5 2.5 5h15C18.33 5 19 4.33 19 3.5S18.33 2 17.5 2zM17.5 15h-15C1.67 15 1 15.67 1 16.5S1.67 18 2.5 18h15c.83 0 1.5-.67 1.5-1.5S18.33 15 17.5 15zM10 6.5c-1.93 0-3.5 1.57-3.5 3.5S8.07 13.5 10 13.5s3.5-1.57 3.5-3.5S11.93 6.5 10 6.5z" />
+                        </svg>
+                      </div>
+                    ) : (
+                      <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4 text-teal-600"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M10 2L3 7v11a2 2 0 002 2h10a2 2 0 002-2V7l-7-5z" />
+                        </svg>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {exercise.sets.map((set, setIndex) => (
-                      <div
-                        key={setIndex}
-                        className="bg-white border rounded-md px-3 py-1 text-xs"
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h4 className="font-semibold text-gray-900">
+                        {exercise.name}
+                      </h4>
+                      <span
+                        className={`px-2 py-1 rounded-md text-xs font-medium ${
+                          exercise.category === "strength"
+                            ? "bg-purple-100 text-purple-700"
+                            : "bg-teal-100 text-teal-700"
+                        }`}
                       >
-                        {set.reps && <span>{set.reps} reps</span>}
-                        {set.weight && (
-                          <span className="ml-1">@ {set.weight}lbs</span>
-                        )}
-                        {set.duration && (
-                          <span className="ml-1">{set.duration}hrs</span>
-                        )}
-                      </div>
-                    ))}
+                        {exercise.category === "strength"
+                          ? "Strength"
+                          : "Cardio"}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-3 text-sm text-gray-600">
+                      {exercise.sets.map((set, setIndex) => (
+                        <div key={setIndex} className="flex items-center">
+                          <span className="font-medium">
+                            Set {setIndex + 1}:
+                          </span>
+                          <span className="ml-1">
+                            {set.reps && `${set.reps} reps`}
+                            {set.weight && ` @ ${set.weight} lbs`}
+                            {set.duration && `${set.duration} hrs`}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
