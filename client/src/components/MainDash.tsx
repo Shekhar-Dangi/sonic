@@ -4,10 +4,12 @@ import { useExerciseChart } from "../hooks/useExerciseChart";
 import { useDashboardSync } from "../hooks/useDashboardSync";
 import InteractiveContinuousChart from "./InteractiveContinuousChart";
 import MainCard from "./MainCard";
+import WorkoutStreak from "./WorkoutStreak";
+import { useUserStore } from "../stores/userStore";
 
 function MainDash() {
   const { volume, duration, sessions } = useSummary();
-
+  const { logs } = useUserStore();
   const { selectedExercise, selectedMetricType } = useDashboardSync();
 
   const {
@@ -46,7 +48,7 @@ function MainDash() {
 
   return (
     <>
-      <div className="flex-1/1  px-8 flex gap-16 flex-col">
+      <div className="flex-1/1  flex gap-16 flex-col">
         <div className="flex justify-between md-lg:flex-row flex-col gap-4 ">
           {stats.map((stat) => (
             <MainCard
@@ -101,6 +103,9 @@ function MainDash() {
               </div>
             </div>
           )}
+        </div>
+        <div className="hidden 3xl:block">
+          <WorkoutStreak workoutSessions={logs} />
         </div>
       </div>
     </>

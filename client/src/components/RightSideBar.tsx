@@ -21,13 +21,15 @@ function RightSideBar() {
 
   return (
     <>
-      <div className="flex-none px-8 flex flex-col sm-md:flex-row gap-4 justify-between 3xl:flex-col 3xl:justify-start  ">
-        <Calendar
-          data={calendarData}
-          canGoToNextMonth={canGoToNextMonth}
-          formatDateKey={formatDateKey}
-          onDateClick={handleDateClick}
-        />
+      <div className="flex-none p-0 3xl:px-8 flex flex-col sm-md:flex-row gap-4 justify-between 3xl:flex-col 3xl:justify-start ">
+        <div className="3xl:block hidden">
+          <Calendar
+            data={calendarData}
+            canGoToNextMonth={canGoToNextMonth}
+            formatDateKey={formatDateKey}
+            onDateClick={handleDateClick}
+          />
+        </div>
         <div className="hidden flex-1 xl:block 3xl:hidden">
           {hasFatData ? (
             <InteractiveContinuousChart data={fatData} config={fatConfig} />

@@ -8,9 +8,12 @@ import InsightsPage from "../components/InsightsPage";
 import SettingsPage from "../components/SettingsPage";
 import VoiceLogPage from "../components/VoiceLogPage";
 import { useDashboardStore } from "../stores/dashboardStore";
+import { useUserStore } from "../stores/userStore";
+import WorkoutStreak from "../components/WorkoutStreak";
 
 function Dashboard() {
   const { currentLocation } = useDashboardStore();
+  const { logs } = useUserStore();
 
   const renderMainContent = () => {
     switch (currentLocation) {
@@ -55,9 +58,13 @@ function Dashboard() {
 
       <div className="3xl:ml-[300px]">
         <Navbar />
-        <div className="main-container flex flex-col 3xl:flex-row justify-between gap-16 3xl:gap-0">
+        <div className="main-container flex flex-col 3xl:flex-row justify-between gap-16 3xl:gap-0 m-auto p-0 ">
           {renderMainContent()}
+          <div className="3xl:hidden block">
+            <WorkoutStreak workoutSessions={logs} />
+          </div>
         </div>
+
         <Footer />
       </div>
     </>
