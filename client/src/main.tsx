@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import { ClerkProvider } from "@clerk/clerk-react";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import SignInPage from "./components/SignInPage.tsx";
+import SignUpPage from "./components/SignUpPage.tsx";
 import { AuthWrapper } from "./components/AuthWrapper.tsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -18,7 +19,11 @@ if (!PUBLISHABLE_KEY) {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <ClerkProvider
+        publishableKey={PUBLISHABLE_KEY}
+        afterSignInUrl="/dashboard"
+        afterSignUpUrl="/dashboard"
+      >
         <AuthWrapper>
           <Routes>
             <Route index element={<App />} />
@@ -30,7 +35,8 @@ createRoot(document.getElementById("root")!).render(
                 </ProtectedRoute>
               }
             />
-            <Route path="sign-in" element={<SignInPage />} />
+            <Route path="/sign-in/*" element={<SignInPage />} />
+            <Route path="/sign-up/*" element={<SignUpPage />} />
           </Routes>
         </AuthWrapper>
       </ClerkProvider>
