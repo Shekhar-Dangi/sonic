@@ -51,13 +51,15 @@ function Dashboard() {
 
   return (
     <>
-      <Navbar />
+      <SideBar />
 
-      <div className="main-container flex flex-col 3xl:flex-row justify-between gap-16 3xl:gap-0">
-        <SideBar />
-        {renderMainContent()}
+      <div className="3xl:ml-[300px]">
+        <Navbar />
+        <div className="main-container flex flex-col 3xl:flex-row justify-between gap-16 3xl:gap-0">
+          {renderMainContent()}
+        </div>
+        <Footer />
       </div>
-      <Footer />
     </>
   );
 }

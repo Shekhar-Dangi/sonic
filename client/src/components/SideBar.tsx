@@ -20,12 +20,11 @@ function SideBar() {
   const { addLog, addMetric } = useUserStore();
   const { currentLocation, setCurrentLocation } = useDashboardStore();
 
-  // Track screen size for responsive voice log visibility
   const [isLarge3xl, setIsLarge3xl] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsLarge3xl(window.innerWidth >= 1300); // 3xl breakpoint
+      setIsLarge3xl(window.innerWidth >= 1300);
     };
 
     checkScreenSize();
@@ -87,7 +86,7 @@ function SideBar() {
 
   if (!browserSupportsSpeechRecognition) {
     return (
-      <div className="bg-white p-8 flex-1/3 flex flex-col justify-between items-between min-h-[600px] mt-0">
+      <div className="bg-white p-8 flex flex-col justify-between items-between">
         <div className="flex flex-row 3xl:flex-col justify-center gap-4 mt-0">
           {sideBarItems
             .filter((item) => {
@@ -140,11 +139,10 @@ function SideBar() {
 
   return (
     <>
-      <div className="bg-white p-4 rounded-lg main-container 3xl:p-16 gap-8 flex-1/3 flex flex-col justify-between items-between  max-h-[600px] mt-0">
+      <div className="bg-white p-4 rounded-lg main-container 3xl:p-16 gap-8 flex flex-col justify-between items-between mt-0 3xl:h-[100vh] 3xl:fixed 3xl:left-0 3xl:top-0 3xl:mt-0 3xl:w-[300px]">
         <div className="flex flex-row 3xl:flex-col justify-center gap-4">
           {sideBarItems
             .filter((item) => {
-              // Hide voice log on 3xl+ screens
               if (item.hideOn3xl) {
                 return !isLarge3xl;
               }
