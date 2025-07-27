@@ -12,7 +12,7 @@ function Navbar() {
     }
   };
   return (
-    <div className="main-container 3xl:flex hidden justify-between px-10 py-4">
+    <div className="main-container flex justify-between px-10 py-4">
       <div className="flex gap-4 items-center">
         <img className="w-10" src={sonic} alt="sonic logo" />
         <h1 className="font-bold text-primary-600">sonic</h1>
