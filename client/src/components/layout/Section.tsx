@@ -1,7 +1,9 @@
+import type { ReactNode } from "react";
+
 interface SectionProps {
   title: string;
   subtitle: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 function Section({ title, subtitle, children }: SectionProps) {
@@ -15,7 +17,7 @@ function Section({ title, subtitle, children }: SectionProps) {
           <p className="text-md 2xl:text-lg text-black-700">{subtitle}</p>
         </div>
 
-        <div className="grid grid-rows-3  mx-auto xl:grid-cols-3 xl:grid-rows-none gap-6 lg:gap-8">
+        <div className="grid grid-rows-3  mx-auto xl:grid-cols-3 xl:grid-rows-none gap-8 lg:gap-10">
           {children}
         </div>
       </div>

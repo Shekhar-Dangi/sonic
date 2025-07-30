@@ -1,14 +1,19 @@
 import { Link, useNavigate } from "react-router";
-import sonic from "../assets/icons/sonic.png";
-import pfp from "../assets/icons/pfp.jpg";
-import { SignOutButton, useUser } from "@clerk/clerk-react";
+import sonic from "../../assets/icons/sonic.png";
+import pfp from "../../assets/icons/pfp.jpg";
+import { useClerk, useUser } from "@clerk/clerk-react";
+import { Button } from "../ui/Button";
 
 function Navbar() {
   const { user } = useUser();
+  const { signOut } = useClerk();
+
   const navigate = useNavigate();
   const handleRoute = () => {
     if (!user) {
       navigate("/sign-in");
+    } else {
+      signOut();
     }
   };
   return (
@@ -29,18 +34,14 @@ function Navbar() {
         </Link>
       </div>
       <div className="flex gap-8">
-        <div
-          className="inline-block  text-center cursor-pointer btn-primary"
+        <Button
+          variant="primary"
+          size="md"
           onClick={handleRoute}
-        >
-          {user ? <SignOutButton /> : "Sign In"}
-        </div>
-        <img
-          className="w-10 rounded-full hidden"
-          src={pfp}
-          alt="profile icon"
+          text={user ? "Sign Out" : "Sign In"}
         />
       </div>
+      <img className="w-10 rounded-full hidden" src={pfp} alt="profile icon" />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useUserStore } from "../stores/userStore";
+import { useUserStore } from "../../stores/userStore";
 
 const LogsPage = () => {
   const { logs } = useUserStore();
@@ -68,10 +68,7 @@ const LogsPage = () => {
 
       <div className="space-y-6">
         {recentLogs.map((log) => (
-          <div
-            key={log.id}
-            className="card p-6 hover:shadow-lg transition-shadow"
-          >
+          <div key={log.id} className="card">
             <div className="flex justify-between items-center mb-4">
               <div className="text-sm text-gray-600">
                 {formatDate(log.date)}

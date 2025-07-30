@@ -1,5 +1,5 @@
 import type { Metric, WorkoutLog } from "../stores/types";
-import type { ChartDataPoint } from "../components/InteractiveContinuousChart";
+import type { ChartDataPoint } from "../components/charts/InteractiveContinuousChart";
 
 export const filterByTimeRange = <T extends { date: string | Date }>(
   data: T[],

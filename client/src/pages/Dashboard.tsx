@@ -1,19 +1,23 @@
-import Footer from "../components/Footer";
-import MainDash from "../components/MainDash";
-import Navbar from "../components/Navbar";
-import RightSideBar from "../components/RightSideBar";
-import SideBar from "../components/SideBar";
-import LogsPage from "../components/LogsPage";
-import InsightsPage from "../components/InsightsPage";
-import SettingsPage from "../components/SettingsPage";
-import VoiceLogPage from "../components/VoiceLogPage";
+import Footer from "../components/layout/Footer";
+import MainDash from "../components/dashboard/MainDash";
+import Navbar from "../components/layout/Navbar";
+
+import SideBar from "../components/layout/SideBar";
+import LogsPage from "../components/dashboard/LogsPage";
+import InsightsPage from "../components/dashboard/InsightsPage";
+import SettingsPage from "../components/dashboard/SettingsPage";
+import VoiceLogPage from "../components/dashboard/VoiceLogPage";
 import { useDashboardStore } from "../stores/dashboardStore";
 import { useUserStore } from "../stores/userStore";
-import WorkoutStreak from "../components/WorkoutStreak";
+
+import YearStreak from "../components/ui/YearStreak";
+import { useStreakData } from "../hooks/useStreakData";
+import RightSideBar from "../components/RightSideBar";
 
 function Dashboard() {
   const { currentLocation } = useDashboardStore();
   const { logs } = useUserStore();
+  const streakData = useStreakData(logs);
 
   const renderMainContent = () => {
     switch (currentLocation) {
@@ -63,7 +67,7 @@ function Dashboard() {
           {renderMainContent()}
           {currentLocation === "dashboard" ? (
             <div className="3xl:hidden block">
-              <WorkoutStreak workoutSessions={logs} />
+              <YearStreak title="Workout Activity" streakData={streakData} />
             </div>
           ) : (
             ""

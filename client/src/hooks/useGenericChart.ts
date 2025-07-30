@@ -4,7 +4,7 @@ import { transformLogsForChart, transformMetricsForChart } from "../lib/charts";
 import type {
   ChartDataPoint,
   ChartConfig,
-} from "../components/InteractiveContinuousChart";
+} from "../components/charts/InteractiveContinuousChart";
 import type { Metric, WorkoutLog } from "../stores/types";
 
 export interface UseGenericChartParams {

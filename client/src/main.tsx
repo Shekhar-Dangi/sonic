@@ -5,10 +5,11 @@ import "./index.css";
 import App from "./App.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import { ClerkProvider } from "@clerk/clerk-react";
-import ProtectedRoute from "./components/ProtectedRoute.tsx";
-import SignInPage from "./components/SignInPage.tsx";
-import SignUpPage from "./components/SignUpPage.tsx";
-import { AuthWrapper } from "./components/AuthWrapper.tsx";
+import ProtectedRoute from "./components/auth/ProtectedRoute.tsx";
+import SignInPage from "./components/auth/SignInPage.tsx";
+import SignUpPage from "./components/auth/SignUpPage.tsx";
+import { AuthWrapper } from "./components/auth/AuthWrapper.tsx";
+import Support from "./pages/Support.tsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -35,6 +36,7 @@ createRoot(document.getElementById("root")!).render(
                 </ProtectedRoute>
               }
             />
+            <Route path="/support" element={<Support />} />
             <Route path="/sign-in/*" element={<SignInPage />} />
             <Route path="/sign-up/*" element={<SignUpPage />} />
           </Routes>

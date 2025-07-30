@@ -2,7 +2,7 @@ import { useGenericChart, type UseGenericChartParams } from "./useGenericChart";
 import type {
   ChartDataPoint,
   ChartConfig,
-} from "../components/InteractiveContinuousChart";
+} from "../components/charts/InteractiveContinuousChart";
 
 interface UseExerciseChartReturn {
   data: ChartDataPoint[];

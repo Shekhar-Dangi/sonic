@@ -1,5 +1,5 @@
 import { SignIn } from "@clerk/react-router";
-import Navbar from "./Navbar";
+import Navbar from "../layout/Navbar";
 
 export default function SignInPage() {
   return (

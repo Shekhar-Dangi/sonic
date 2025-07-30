@@ -1,13 +1,8 @@
-import { useStreakData, type StreakDay } from "../hooks/useStreakData";
+import { type StreakDay } from "../../hooks/useStreakData";
 
-interface WorkoutSession {
-  id: string;
-  date: string | Date;
-  exercises: { sets: { weight?: number; reps?: number }[] }[];
-}
-
-interface WorkoutStreakProps {
-  workoutSessions: WorkoutSession[];
+interface YearStreakProps {
+  streakData: StreakDay[];
+  title: string;
   className?: string;
 }
 
@@ -37,21 +32,18 @@ const StreakSquare = ({ day }: { day: StreakDay }) => {
   );
 };
 
-export default function WorkoutStreak({
-  workoutSessions,
-  className = "",
-}: WorkoutStreakProps) {
-  const streakData = useStreakData(workoutSessions);
-
+export default function YearStreak({
+  title,
+  className,
+  streakData,
+}: YearStreakProps) {
   const weeks: StreakDay[][] = [];
   for (let i = 0; i < streakData.length; i += 7) {
     weeks.push(streakData.slice(i, i + 7));
   }
-
   return (
     <div className={`p-8 ${className} card`}>
-      <h3 className="text-lg font-semibold mb-4">Workout Activity</h3>
-
+      <h3 className="text-lg font-semibold mb-4">{title}</h3>
       <div className="flex gap-1 overflow-x-auto">
         {weeks.map((week, weekIndex) => (
           <div key={weekIndex} className="flex flex-col gap-1">

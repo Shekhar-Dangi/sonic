@@ -1,4 +1,4 @@
-import { useAuthSync } from "../hooks/useAuthSync";
+import { useAuthSync } from "../../hooks/useAuthSync";
 
 interface AuthWrapperProps {
   children: React.ReactNode;

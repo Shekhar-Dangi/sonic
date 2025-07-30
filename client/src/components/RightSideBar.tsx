@@ -3,7 +3,7 @@ import ExerciseSelector from "./ExerciseSelector";
 import { useUserStore } from "../stores/userStore";
 import { useCalendarData } from "../hooks/useCalendarData";
 import { useMetricChart } from "../hooks/useMetricChart";
-import InteractiveContinuousChart from "./InteractiveContinuousChart";
+import InteractiveContinuousChart from "./charts/InteractiveContinuousChart";
 
 function RightSideBar() {
   const { logs } = useUserStore();

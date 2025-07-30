@@ -1,16 +1,18 @@
-import { useSummary } from "../hooks/useSummary";
-import { useMetricChart } from "../hooks/useMetricChart";
-import { useExerciseChart } from "../hooks/useExerciseChart";
-import { useDashboardSync } from "../hooks/useDashboardSync";
-import InteractiveContinuousChart from "./InteractiveContinuousChart";
-import MainCard from "./MainCard";
-import WorkoutStreak from "./WorkoutStreak";
-import { useUserStore } from "../stores/userStore";
+import { useSummary } from "../../hooks/useSummary";
+import { useMetricChart } from "../../hooks/useMetricChart";
+import { useExerciseChart } from "../../hooks/useExerciseChart";
+import { useDashboardSync } from "../../hooks/useDashboardSync";
+import InteractiveContinuousChart from "../charts/InteractiveContinuousChart";
+import YearStreak from "../ui/YearStreak";
+import { useUserStore } from "../../stores/userStore";
+import Card from "../ui/Card";
+import { useStreakData } from "../../hooks/useStreakData";
 
 function MainDash() {
   const { volume, duration, sessions } = useSummary();
   const { logs } = useUserStore();
   const { selectedExercise, selectedMetricType } = useDashboardSync();
+  const streakData = useStreakData(logs);
 
   const {
     data: weightData,
@@ -51,11 +53,10 @@ function MainDash() {
       <div className="flex-1/1  flex gap-16 flex-col">
         <div className="flex justify-between md-lg:flex-row flex-col gap-4 ">
           {stats.map((stat) => (
-            <MainCard
-              key={stat.id}
-              title={stat.title}
-              subtitle={stat.subtitle}
-            />
+            <Card animate={false} key={stat.id} size="sm" className="gap-4">
+              <h4>{stat.title}</h4>
+              <p className="text-4xl font-bold">{stat.subtitle}</p>
+            </Card>
           ))}
         </div>
         <div className="flex flex-col md-lg:flex-row 3xl:flex-col gap-8">
@@ -105,7 +106,7 @@ function MainDash() {
           )}
         </div>
         <div className="hidden 3xl:block">
-          <WorkoutStreak workoutSessions={logs} />
+          <YearStreak title="Workout Activity" streakData={streakData} />
         </div>
       </div>
     </>

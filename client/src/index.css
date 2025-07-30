@@ -53,16 +53,8 @@
 
 /* Component Patterns */
 @layer components {
-  .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 active:bg-primary-700 md:px-6 md:py-3 px-4 py-2 text-white  rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 text-base md:text-lg focus:ring-primary-600 focus:ring-offset-2;
-  }
-
-  .btn-secondary {
-    @apply bg-black-100 hover:bg-black-200 text-black-900 font-semibold md:px-6 md:py-3 px-4 py-2 text-base md:text-lg  rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-black-500 focus:ring-offset-2;
-  }
-
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-black-200 px-10 py-8;
+    @apply bg-white rounded-xl shadow-sm border border-black-200 px-10 py-8  p-6 hover:shadow-lg transition-shadow;
   }
 
   .text-gradient {

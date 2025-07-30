@@ -1,11 +1,14 @@
 import { useState } from "react";
-import mic from "../assets/icons/mic.svg";
+import mic from "../../assets/icons/mic.svg";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import { useAuth } from "@clerk/clerk-react";
-import { useUserStore } from "../stores/userStore";
-import { createApiUrl } from "../lib/api";
+import { useUserStore } from "../../stores/userStore";
+import { createApiUrl } from "../../lib/api";
+import Card from "../ui/Card";
+import { Button } from "../ui/Button";
+import RightSideBar from "../RightSideBar";
 
 function VoiceLogPage() {
   const { addLog, addMetric } = useUserStore();
@@ -48,8 +51,6 @@ function VoiceLogPage() {
   };
 
   const handleClearTranscript = () => {
-    SpeechRecognition.stopListening();
-    setIsListening(false);
     resetTranscript();
   };
 
@@ -109,72 +110,69 @@ function VoiceLogPage() {
   }
 
   return (
-    <div className="flex-1 p-4 md:p-8 max-w-2xl mx-auto">
-      <div className="bg-white rounded-lg shadow-sm border border-black-200 p-6 md:p-8">
+    <div className="flex w-full flex-row gap-8">
+      <Card
+        size="lg"
+        animate={false}
+        className="flex-1 max-w-2xl mx-auto gap-4 "
+      >
         <h2 className="text-2xl font-bold text-center mb-6 text-black-900">
           Voice Logging
         </h2>
-
-        {/* Voice Recording Controls */}
-        <div className="space-y-6">
+        <div></div>
+        {
+          <div className="px-4 py-1 bg-gray-100 rounded-lg">
+            <div className="text-sm text-black-700 flex items-center gap-2 justify-center">
+              {listening ? "listening" : "idle"}
+            </div>
+          </div>
+        }
+        <div className="space-y-10">
           <div className="text-center">
-            <button
+            <Button
+              variant="primary"
+              size="lg"
               onClick={handleStartListening}
               disabled={isProcessing}
-              className={`w-20 h-20 rounded-full transition-all duration-200 flex items-center justify-center mx-auto ${
+              roundness="full"
+              className={`w-20 h-20 rounded-full ${
                 listening || isListening
                   ? "bg-red-500 text-white animate-pulse scale-110"
                   : "bg-primary-600 hover:bg-primary-700 text-white"
               } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
-            >
-              <img src={mic} alt="Microphone" className="w-8 h-8" />
-            </button>
-            <p className="text-sm text-gray-600 mt-3 font-medium">
-              {listening || isListening
-                ? "Listening... (tap to stop)"
-                : "Tap to start recording"}
-            </p>
+              text={<img src={mic} alt="Microphone" className="w-8 h-8" />}
+            ></Button>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-3">
-            <button
+          <div className="flex gap-4">
+            <Button
+              size="md"
+              text="Clear"
+              variant="secondary"
               onClick={handleClearTranscript}
               disabled={!transcript || isProcessing}
-              className="flex-1 btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Clear
-            </button>
-            <button
+              className="flex-1  disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+
+            <Button
+              text={isProcessing ? "Processing..." : "Log Workout"}
+              size="md"
+              variant="primary"
               onClick={sendRawData}
               disabled={!transcript.trim() || isProcessing}
-              className="flex-1 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isProcessing ? "Processing..." : "Log Workout"}
-            </button>
+              className="flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+            />
           </div>
 
-          {/* Transcript Display */}
-          {transcript && (
-            <div className="p-4 bg-gray-50 rounded-lg border">
-              <div className="text-xs text-gray-400 uppercase tracking-wide mb-2">
-                Voice Input
-              </div>
-              <div className="text-sm text-gray-700 leading-relaxed max-h-40 overflow-y-auto">
-                {transcript}
+          {
+            <div className="p-4 bg-gray-100 p-4 min-w-[350px] min-h-[100px] rounded-lg">
+              <div className="text-sm text-gray-700 leading-relaxed overflow-y-auto">
+                {transcript || "Start speaking"}
               </div>
             </div>
-          )}
+          }
 
           {/* Listening Indicator */}
-          {(listening || isListening) && !transcript && (
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <div className="text-sm text-blue-600 flex items-center gap-2 justify-center">
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                Listening... speak now
-              </div>
-            </div>
-          )}
 
           {/* Instructions */}
           <div className="text-center text-gray-500 text-sm">
@@ -188,6 +186,9 @@ function VoiceLogPage() {
             </div>
           </div>
         </div>
+      </Card>
+      <div className="hidden 3xl:block">
+        <RightSideBar />
       </div>
     </div>
   );

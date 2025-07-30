@@ -1,8 +1,8 @@
-import Card from "./Card";
-import mic from "../assets/icons/mic.svg";
-import chart from "../assets/icons/chart.svg";
-import database from "../assets/icons/database.svg";
-import Section from "./Section";
+import Card from "../ui/Card";
+import mic from "../../assets/icons/mic.svg";
+import chart from "../../assets/icons/chart.svg";
+import database from "../../assets/icons/database.svg";
+import Section from "../layout/Section";
 
 const howItWorksSteps = [
   {
@@ -33,12 +33,17 @@ function How() {
       title="How Sonic Works"
       subtitle="From voice to insight in seconds"
       children={howItWorksSteps.map((step) => (
-        <Card
-          key={step.id}
-          title={step.title}
-          subtitle={step.subtitle}
-          icon={step.icon}
-        />
+        <Card animate={false} size="md" key={step.id}>
+          <img
+            src={step.icon}
+            className="w-8 bg-primary-400 rounded-full p-2"
+            alt=""
+          />
+          <h4 className="text-lg font-semibold text-black-900 mt-4 mb-2">
+            {step.title}
+          </h4>
+          <p className="text-black-700 leading-relaxed para">{step.subtitle}</p>
+        </Card>
       ))}
     />
   );

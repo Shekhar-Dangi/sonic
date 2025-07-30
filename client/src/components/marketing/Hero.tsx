@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
-import mic from "../assets/icons/mic.svg";
-import hero from "../assets/images/hero.png";
+import mic from "../../assets/icons/mic.svg";
+import hero from "../../assets/images/hero.png";
 
 function Hero() {
   const navigator = useNavigate();
