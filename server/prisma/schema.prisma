@@ -89,3 +89,10 @@ enum ExerciseCategory {
   mobility
   custom
 }
+
+enum Intensity {
+  easy
+  moderate
+  hard
+  max
+}
