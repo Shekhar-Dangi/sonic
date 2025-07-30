@@ -8,6 +8,7 @@ export const useUserStore = create<UserStore>((set) => ({
   logs: [],
   metrics: [],
   isLoading: false,
+  toProcess: "",
 
   setUser: (user) => {
     set({ user, isLoggedIn: user !== null });
@@ -15,6 +16,10 @@ export const useUserStore = create<UserStore>((set) => ({
 
   setLoggedIn: (isLoggedIn) => {
     set({ isLoggedIn });
+  },
+
+  setToProcess: (transcript) => {
+    set({ toProcess: transcript });
   },
 
   fetchMetrics: async (token?: string) => {
@@ -33,6 +38,27 @@ export const useUserStore = create<UserStore>((set) => ({
       set({ isLoading: false, metrics: data.data.metrics });
     } catch (error) {
       console.error("Error fetching logs:", error);
+      set({ isLoading: false });
+    }
+  },
+  fetchToProcess: async (token?: string) => {
+    set({ isLoading: true });
+    try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(createApiUrl("/api/logs/saved"), {
+        headers,
+      });
+      const data = await response.json();
+      set({ toProcess: data.toProcess, isLoading: false });
+    } catch (error) {
+      console.error("Error fetching saved data:", error);
       set({ isLoading: false });
     }
   },

@@ -11,7 +11,7 @@ import { Button } from "../ui/Button";
 import RightSideBar from "../RightSideBar";
 
 function VoiceLogPage() {
-  const { addLog, addMetric } = useUserStore();
+  const { addLog, addMetric, toProcess, setToProcess } = useUserStore();
   const { getToken } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -50,19 +50,75 @@ function VoiceLogPage() {
     }
   };
 
-  const handleClearTranscript = () => {
+  const handleClearTranscript = async () => {
     resetTranscript();
+    console.log(!toProcess.trim());
+    if (toProcess.trim())
+      try {
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
+        const token = await getToken();
+        if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+
+        const response = await fetch(createApiUrl("/api/logs/save"), {
+          headers,
+          method: "POST",
+          body: JSON.stringify({ data: "" }),
+        });
+        const data = await response.json();
+        setToProcess("");
+        console.log(data);
+      } catch (error) {
+        console.error("Error clearing saved log:", error);
+      }
+  };
+
+  const stopSpeechInterface = (): string => {
+    setIsProcessing(true);
+    SpeechRecognition.stopListening();
+    setIsListening(false);
+    const script = transcript;
+    resetTranscript();
+    return script;
+  };
+
+  const saveLog = async () => {
+    console.log("saving...");
+    const script = stopSpeechInterface();
+    if (!transcript.trim()) return;
+
+    try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      const token = await getToken();
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(createApiUrl("/api/logs/save"), {
+        headers,
+        method: "POST",
+        body: JSON.stringify({ data: script }),
+      });
+
+      const data = await response.json();
+
+      console.log(data);
+    } catch (error) {
+      console.error("Error logging voice data:", error);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const sendRawData = async () => {
     if (!transcript.trim()) return;
 
-    setIsProcessing(true);
-
-    SpeechRecognition.stopListening();
-    setIsListening(false);
-    const currentTranscript = transcript;
-    resetTranscript();
+    const currentTranscript = stopSpeechInterface();
 
     try {
       const headers: Record<string, string> = {
@@ -153,21 +209,30 @@ function VoiceLogPage() {
               disabled={!transcript || isProcessing}
               className="flex-1  disabled:opacity-50 disabled:cursor-not-allowed"
             />
-
             <Button
-              text={isProcessing ? "Processing..." : "Log Workout"}
+              text="Save"
               size="md"
-              variant="primary"
-              onClick={sendRawData}
-              disabled={!transcript.trim() || isProcessing}
+              onClick={saveLog}
+              variant="accent"
               className="flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
-
+          <Button
+            text={isProcessing ? "Processing..." : "Log"}
+            size="md"
+            variant="primary"
+            onClick={sendRawData}
+            disabled={!transcript.trim() || isProcessing}
+            className="flex-1 disabled:opacity-50 disabled:cursor-not-allowed w-full"
+          />
           {
-            <div className="p-4 bg-gray-100 p-4 min-w-[350px] min-h-[100px] rounded-lg">
-              <div className="text-sm text-gray-700 leading-relaxed overflow-y-auto">
-                {transcript || "Start speaking"}
+            <div className="p-4 bg-gray-100 p-4 w-[350px] min-h-[80px] rounded-lg">
+              <div className="text-sm text-gray-500 leading-relaxed overflow-y-auto">
+                {toProcess + transcript || (
+                  <p>
+                    No Saved Log Found. <br /> Click mic to start speaking.
+                  </p>
+                )}
               </div>
             </div>
           }

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   // output   = "../src/generated/prisma"
@@ -22,6 +16,7 @@ model User {
   createdAt DateTime         @default(now())
   sessions  WorkoutSession[]
   metrics   BodyMetric[]
+  toProcess String?
 }
 
 model WorkoutSession {
@@ -34,6 +29,7 @@ model WorkoutSession {
   createdAt DateTime    @default(now())
   exercises Exercise[]
   insights  AIInsight[]
+  intensity Int?
 }
 
 model Exercise {
@@ -48,14 +44,14 @@ model Exercise {
 }
 
 model ExerciseSet {
-  id         String     @id @default(uuid())
-  exercise   Exercise   @relation(fields: [exerciseId], references: [id])
+  id         String   @id @default(uuid())
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
   exerciseId String
   reps       Int?
   weight     Float?
-  distance   Float? // in meters (for cardio)
-  duration   Float? // in seconds (for holds / cardio)
-  intensity  Intensity?
+  distance   Float?
+  duration   Float?
+  intensity  Int?
   note       String?
 }
 
@@ -92,11 +88,4 @@ enum ExerciseCategory {
   cardio
   mobility
   custom
-}
-
-enum Intensity {
-  easy
-  moderate
-  hard
-  max
 }

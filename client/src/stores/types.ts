@@ -49,12 +49,15 @@ export interface UserStore {
   logs: WorkoutLog[];
   metrics: Metric[];
   isLoading: boolean;
+  toProcess: string;
 
   // Actions
   setUser: (user: User | null) => void;
+  setToProcess: (transcript: string) => void;
   setLoggedIn: (isLoggedIn: boolean) => void;
   fetchLogs: (token?: string) => Promise<void>;
   fetchMetrics: (token?: string) => Promise<void>;
+  fetchToProcess: (token?: string) => Promise<void>;
   addLog: (log: WorkoutLog) => void;
   addMetric: (metric: Metric) => void;
   setLoading: (loading: boolean) => void;

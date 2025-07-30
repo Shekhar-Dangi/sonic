@@ -114,3 +114,51 @@ export const getLogs = async (
     });
   }
 };
+
+export const saveLog = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    if (!req.authUserId) {
+      res.json({ message: "User not authenticated!" });
+      return;
+    }
+
+    const { data } = req.body;
+    await prisma.user.update({
+      where: {
+        id: req.authUserId,
+      },
+      data: {
+        toProcess: data,
+      },
+    });
+    res.json({ message: "Workout Saved!" });
+  } catch (error) {
+    console.error("Error saving log:", error);
+    res.status(500).json({ message: "Failed to create a log!", error: error });
+  }
+};
+
+export const getSavedLog = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    if (!req.authUserId) {
+      res.json({ message: "User not authenticated!" });
+      return;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.authUserId,
+      },
+    });
+    res.json({ message: "Workout Saved!", toProcess: user?.toProcess });
+  } catch (error) {
+    console.error("Error saving log:", error);
+    res.status(500).json({ message: "Failed to create a log!", error: error });
+  }
+};

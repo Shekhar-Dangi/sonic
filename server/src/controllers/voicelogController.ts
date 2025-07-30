@@ -142,7 +142,7 @@ Return JSON matching this EXACT schema:
     ]
   },
   "duration": number|null,
-  "note": "string"|null
+  "note": "string"|null,
 }
 `;
 

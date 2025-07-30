@@ -6,15 +6,13 @@ import Plan from "../components/marketing/Plan";
 
 function Home() {
   return (
-    <div className="min-h-screen grid grid-rows-[auto_1fr_auto]">
+    <>
       <Navbar />
-      <main>
-        <Hero />
-        <How />
-        <Plan />
-      </main>
+      <Hero />
+      <How />
+      <Plan />
       <Footer />
-    </div>
+    </>
   );
 }
 
