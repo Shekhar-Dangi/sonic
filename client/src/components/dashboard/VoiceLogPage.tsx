@@ -228,11 +228,13 @@ function VoiceLogPage() {
           {
             <div className="p-4 bg-gray-100 p-4 w-[350px] min-h-[80px] rounded-lg">
               <div className="text-sm text-gray-500 leading-relaxed overflow-y-auto">
-                {toProcess + transcript || (
-                  <p>
-                    No Saved Log Found. <br /> Click mic to start speaking.
-                  </p>
-                )}
+                {toProcess
+                  ? toProcess
+                  : "" + transcript || (
+                      <p>
+                        No Saved Log Found. <br /> Click mic to start speaking.
+                      </p>
+                    )}
               </div>
             </div>
           }
