@@ -1,9 +1,9 @@
-import express, { Request, Response, Application } from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
 import { requireAuth } from "./middleware/auth";
-
+import expressWs from "express-ws";
 import logsRoute from "./routes/logs";
 import metricsRoute from "./routes/metrics";
 import voiceRoute from "./routes/voicelog";
@@ -12,7 +12,7 @@ import usersRoute from "./routes/users";
 import { AuthenticatedRequest } from "./middleware/auth";
 
 dotenv.config();
-const app: Application = express();
+const { app } = expressWs(express());
 
 app.use(cors({}));
 app.use(express.json());
@@ -31,7 +31,14 @@ app.use("/api/logs", logsRoute);
 app.use("/api/metrics", metricsRoute);
 app.use("/api/voice-log", voiceRoute);
 app.use("/api/users", usersRoute);
+app.ws("/stream", (ws) => {
+  console.log("WebSocket connected");
 
+  ws.on("message", (msg) => {
+    console.log("Got message:", msg);
+    ws.send(`You said: ${msg}`);
+  });
+});
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 
 app

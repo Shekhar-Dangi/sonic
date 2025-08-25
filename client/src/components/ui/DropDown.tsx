@@ -22,8 +22,8 @@ export function Dropdown({
   className = "",
 }: DropdownProps) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(value || options[0]?.value || "");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [selected, setSelected] = useState(value || options[0]?.value || "");
 
   const handleSelect = (val: string) => {
     setSelected(val);

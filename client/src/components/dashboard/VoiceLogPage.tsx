@@ -10,6 +10,7 @@ import Card from "../ui/Card";
 import { Button } from "../ui/Button";
 import RightSideBar from "../RightSideBar";
 import { Dropdown } from "../ui/DropDown";
+import useWebSocket from "react-use-websocket";
 
 function VoiceLogPage() {
   const { addLog, addMetric, toProcess, setToProcess, isPremium } =
@@ -17,7 +18,16 @@ function VoiceLogPage() {
   const { getToken } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [isFree, setIsFree] = useState(!isPremium);
 
+  const apiUrl = import.meta.env.VITE_BACKEND_DOMAIN;
+  const socketUrl = "ws://" + apiUrl + "/stream";
+
+  const { sendMessage } = useWebSocket(socketUrl, {
+    onOpen: () => console.log("opened"),
+    shouldReconnect: () => true,
+  });
+  sendMessage("sup?");
   const {
     transcript,
     listening,
@@ -27,27 +37,43 @@ function VoiceLogPage() {
 
   const handleStartListening = async () => {
     console.log("clicked", { listening, isListening });
-
-    if (listening || isListening) {
-      await SpeechRecognition.stopListening();
-      setIsListening(false);
-      console.log("Stopping speech recognition");
-    } else {
-      resetTranscript();
-      setIsListening(true);
-      try {
-        await SpeechRecognition.startListening({
-          continuous: true,
-          language: "en-US",
-          interimResults: true,
-        });
-        console.log("Starting speech recognition");
-      } catch (error) {
-        console.error("Speech recognition error:", error);
+    if (isFree) {
+      if (listening || isListening) {
+        await SpeechRecognition.stopListening();
         setIsListening(false);
-        alert(
-          "Speech recognition failed. Please check if you're using HTTPS and have microphone permissions."
-        );
+        console.log("Stopping speech recognition");
+      } else {
+        resetTranscript();
+        setIsListening(true);
+        try {
+          await SpeechRecognition.startListening({
+            continuous: true,
+            language: "en-US",
+            interimResults: true,
+          });
+          console.log("Starting speech recognition");
+        } catch (error) {
+          console.error("Speech recognition error:", error);
+          setIsListening(false);
+          alert(
+            "Speech recognition failed. Please check if you're using HTTPS and have microphone permissions."
+          );
+        }
+      }
+    } else {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+
+      if (isListening) {
+        recorder.stop();
+        setIsListening(true);
+      } else {
+        setIsListening(true);
+        recorder.ondataavailable = (event) => {
+          console.log(event.data);
+        };
+
+        recorder.start(500);
       }
     }
   };
@@ -174,8 +200,8 @@ function VoiceLogPage() {
       disabled: false,
     },
     {
-      label: "Paid",
-      value: "paid",
+      label: "Premium",
+      value: "premium",
       disabled: !isPremium,
     },
   ];
@@ -188,7 +214,11 @@ function VoiceLogPage() {
         className="flex-1 max-w-2xl mx-auto gap-4 "
       >
         <div className="absolute top-4 right-4">
-          <Dropdown options={options} value="free" />
+          <Dropdown
+            onChange={(value) => setIsFree(value === "free" ? true : false)}
+            options={options}
+            value={isFree ? "free" : "premium"}
+          />
         </div>
         <h2 className="text-2xl font-bold text-center mb-6 text-black-900">
           Voice Logging
