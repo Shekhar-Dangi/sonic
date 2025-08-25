@@ -7,6 +7,7 @@ import { logMetrics } from "./metricsController";
 import { prisma } from "../lib/prisma";
 import { Exercise } from "../types/workout.types";
 import type { WorkoutSession, BodyMetric } from "@prisma/client";
+import transcribe from "../utils/elevenlabs";
 
 function extractJsonFromResponse(text: string) {
   try {
@@ -27,6 +28,34 @@ function extractJsonFromResponse(text: string) {
     throw new Error(`Failed to parse JSON: ${text}`);
   }
 }
+
+export const logVoicePremium = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  if (!req.authUserId || !req.isPremium) {
+    res.status(201).json({
+      message: "User not authenticated",
+    });
+  }
+  const file = req.file;
+  if (!file) {
+    res.status(500).json({
+      message: "No file found",
+    });
+  }
+
+  if (file) {
+    const nodeBuffer: Buffer = file.buffer;
+
+    // Convert Buffer → Uint8Array (valid BlobPart)
+    const uint8array = new Uint8Array(nodeBuffer);
+
+    const blob = new Blob([uint8array], { type: file.mimetype });
+    const response = await transcribe(blob);
+    res.json({ success: "true", transcription: response });
+  }
+};
 
 export const logVoice = async (
   req: AuthenticatedRequest,

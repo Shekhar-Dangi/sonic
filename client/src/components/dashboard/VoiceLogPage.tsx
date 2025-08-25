@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import mic from "../../assets/icons/mic.svg";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -10,30 +10,35 @@ import Card from "../ui/Card";
 import { Button } from "../ui/Button";
 import RightSideBar from "../RightSideBar";
 import { Dropdown } from "../ui/DropDown";
-import useWebSocket from "react-use-websocket";
+// import useWebSocket from "react-use-websocket";
 
 function VoiceLogPage() {
   const { addLog, addMetric, toProcess, setToProcess, isPremium } =
     useUserStore();
   const { getToken } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [premiumTranscript, setPremiumTranscript] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [isFree, setIsFree] = useState(!isPremium);
+  const chunks = useRef<Blob[]>([]);
 
-  const apiUrl = import.meta.env.VITE_BACKEND_DOMAIN;
-  const socketUrl = "ws://" + apiUrl + "/stream";
+  // const apiUrl = import.meta.env.VITE_BACKEND_DOMAIN;
+  // const socketUrl = "ws://" + apiUrl + "/stream";
 
-  const { sendMessage } = useWebSocket(socketUrl, {
-    onOpen: () => console.log("opened"),
-    shouldReconnect: () => true,
-  });
-  sendMessage("sup?");
+  // const { sendMessage } = useWebSocket(socketUrl, {
+  //   onOpen: () => console.log("opened"),
+  //   shouldReconnect: () => true,
+  // });
+
   const {
     transcript,
     listening,
     browserSupportsSpeechRecognition,
     resetTranscript,
   } = useSpeechRecognition();
+
+  const stream = useRef<MediaStream | null>(null);
+  const recorder = useRef<MediaRecorder | null>(null);
 
   const handleStartListening = async () => {
     console.log("clicked", { listening, isListening });
@@ -61,19 +66,56 @@ function VoiceLogPage() {
         }
       }
     } else {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
-
       if (isListening) {
-        recorder.stop();
-        setIsListening(true);
+        if (recorder.current && recorder.current.state !== "inactive") {
+          recorder.current.stop(); // actually stop recording
+        }
+        setIsListening(false);
       } else {
+        stream.current = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+        recorder.current = new MediaRecorder(stream.current, {
+          mimeType: "audio/webm",
+        });
         setIsListening(true);
-        recorder.ondataavailable = (event) => {
-          console.log(event.data);
+        recorder.current.ondataavailable = async (event) => {
+          if (event.data && event.data.size > 0) {
+            chunks.current.push(event.data);
+          }
+        };
+        recorder.current.onstop = async () => {
+          try {
+            const headers: Record<string, string> = {};
+            console.log("SENDING");
+            const token = await getToken();
+            if (token) {
+              headers["Authorization"] = `Bearer ${token}`;
+            }
+            const recordedBlob = new Blob(chunks.current, {
+              type: "audio/webm",
+            });
+            const formData = new FormData();
+            formData.append("file", recordedBlob, "recording.webm");
+
+            console.log("sending");
+
+            const response = await fetch(
+              createApiUrl("/api/voice-log/premium"),
+              {
+                headers,
+                method: "POST",
+                body: formData,
+              }
+            );
+            const data = await response.json();
+            setPremiumTranscript(data.transcription.text);
+          } catch (error) {
+            console.log(error);
+          }
         };
 
-        recorder.start(500);
+        recorder.current.start(500);
       }
     }
   };
@@ -278,7 +320,13 @@ function VoiceLogPage() {
               <div className="text-sm text-gray-500 leading-relaxed overflow-y-auto">
                 {toProcess
                   ? toProcess
-                  : "" + transcript || (
+                  : isFree
+                  ? "" + transcript || (
+                      <p>
+                        No Saved Log Found. <br /> Click mic to start speaking.
+                      </p>
+                    )
+                  : premiumTranscript || (
                       <p>
                         No Saved Log Found. <br /> Click mic to start speaking.
                       </p>
