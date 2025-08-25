@@ -6,8 +6,14 @@ export const useAuthSync = () => {
   const { isLoaded, isSignedIn, getToken } = useAuth();
   const { user: clerkUser } = useUser();
 
-  const { setUser, fetchLogs, clearStore, fetchMetrics, fetchToProcess } =
-    useUserStore();
+  const {
+    setUser,
+    fetchLogs,
+    clearStore,
+    fetchMetrics,
+    fetchToProcess,
+    fetchIsPremium,
+  } = useUserStore();
 
   useEffect(() => {
     if (isSignedIn && clerkUser) {
@@ -26,6 +32,7 @@ export const useAuthSync = () => {
           fetchLogs(token);
           fetchMetrics(token);
           fetchToProcess(token);
+          fetchIsPremium(token);
         }
       };
 

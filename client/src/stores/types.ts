@@ -50,6 +50,7 @@ export interface UserStore {
   metrics: Metric[];
   isLoading: boolean;
   toProcess: string;
+  isPremium: boolean;
 
   // Actions
   setUser: (user: User | null) => void;
@@ -58,6 +59,7 @@ export interface UserStore {
   fetchLogs: (token?: string) => Promise<void>;
   fetchMetrics: (token?: string) => Promise<void>;
   fetchToProcess: (token?: string) => Promise<void>;
+  fetchIsPremium: (token?: string) => Promise<void>;
   addLog: (log: WorkoutLog) => void;
   addMetric: (metric: Metric) => void;
   setLoading: (loading: boolean) => void;

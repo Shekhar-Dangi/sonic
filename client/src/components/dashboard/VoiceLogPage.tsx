@@ -9,9 +9,11 @@ import { createApiUrl } from "../../lib/api";
 import Card from "../ui/Card";
 import { Button } from "../ui/Button";
 import RightSideBar from "../RightSideBar";
+import { Dropdown } from "../ui/DropDown";
 
 function VoiceLogPage() {
-  const { addLog, addMetric, toProcess, setToProcess } = useUserStore();
+  const { addLog, addMetric, toProcess, setToProcess, isPremium } =
+    useUserStore();
   const { getToken } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -165,6 +167,19 @@ function VoiceLogPage() {
     );
   }
 
+  const options = [
+    {
+      label: "Free",
+      value: "free",
+      disabled: false,
+    },
+    {
+      label: "Paid",
+      value: "paid",
+      disabled: !isPremium,
+    },
+  ];
+
   return (
     <div className="flex w-full flex-row gap-8">
       <Card
@@ -172,6 +187,9 @@ function VoiceLogPage() {
         animate={false}
         className="flex-1 max-w-2xl mx-auto gap-4 "
       >
+        <div className="absolute top-4 right-4">
+          <Dropdown options={options} value="free" />
+        </div>
         <h2 className="text-2xl font-bold text-center mb-6 text-black-900">
           Voice Logging
         </h2>

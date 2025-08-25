@@ -9,6 +9,7 @@ export const useUserStore = create<UserStore>((set) => ({
   metrics: [],
   isLoading: false,
   toProcess: "",
+  isPremium: false,
 
   setUser: (user) => {
     set({ user, isLoggedIn: user !== null });
@@ -78,6 +79,28 @@ export const useUserStore = create<UserStore>((set) => ({
       });
       const data = await response.json();
       set({ logs: data.data.sessions, isLoading: false });
+    } catch (error) {
+      console.error("Error fetching logs:", error);
+      set({ isLoading: false });
+    }
+  },
+  fetchIsPremium: async (token?: string) => {
+    set({ isLoading: true });
+    try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(createApiUrl("/api/users/premium"), {
+        headers,
+      });
+      const data = await response.json();
+      console.log(data);
+      set({ isPremium: data?.isPremium || false, isLoading: false });
     } catch (error) {
       console.error("Error fetching logs:", error);
       set({ isLoading: false });

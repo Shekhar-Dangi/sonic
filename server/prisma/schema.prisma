@@ -17,6 +17,7 @@ model User {
   sessions  WorkoutSession[]
   metrics   BodyMetric[]
   toProcess String?
+  isPremium Boolean          @default(false)
 }
 
 model WorkoutSession {

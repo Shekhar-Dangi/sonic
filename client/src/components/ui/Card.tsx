@@ -27,7 +27,7 @@ export default function Card(props: CardProps) {
         sizeVariants[props.size]
       } ${props.animate ? "hover:scale-110" : ""} ${
         props.border ? "border-" + props.border : ""
-      } ${props.className}`}
+      } ${props.className} relative`}
     >
       {props.children}
     </div>
