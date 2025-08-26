@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import mic from "../../assets/icons/mic.svg";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -21,6 +21,10 @@ function VoiceLogPage() {
   const [isListening, setIsListening] = useState(false);
   const [isFree, setIsFree] = useState(!isPremium);
   const chunks = useRef<Blob[]>([]);
+
+  useEffect(() => {
+    setPremiumTranscript(toProcess);
+  }, [toProcess]);
 
   // const apiUrl = import.meta.env.VITE_BACKEND_DOMAIN;
   // const socketUrl = "ws://" + apiUrl + "/stream";
@@ -157,65 +161,109 @@ function VoiceLogPage() {
 
   const saveLog = async () => {
     console.log("saving...");
-    const script = stopSpeechInterface();
-    if (!transcript.trim()) return;
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    const token = await getToken();
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
 
-    try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-      const token = await getToken();
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
+    if (isFree) {
+      const script = stopSpeechInterface();
+
+      if (!transcript.trim()) return;
+      try {
+        const response = await fetch(createApiUrl("/api/logs/save"), {
+          headers,
+          method: "POST",
+          body: JSON.stringify({ data: script }),
+        });
+
+        const data = await response.json();
+
+        console.log(data);
+      } catch (error) {
+        console.error("Error logging voice data:", error);
+      } finally {
+        setIsProcessing(false);
       }
+    } else {
+      if (isListening || !premiumTranscript.trim()) return;
+      setIsProcessing(true);
+      try {
+        const response = await fetch(createApiUrl("/api/logs/save"), {
+          headers,
+          method: "POST",
+          body: JSON.stringify({ data: premiumTranscript }),
+        });
+        const data = await response.json();
 
-      const response = await fetch(createApiUrl("/api/logs/save"), {
-        headers,
-        method: "POST",
-        body: JSON.stringify({ data: script }),
-      });
-
-      const data = await response.json();
-
-      console.log(data);
-    } catch (error) {
-      console.error("Error logging voice data:", error);
-    } finally {
-      setIsProcessing(false);
+        console.log(data);
+      } catch (error) {
+        console.error("Error logging voice data:", error);
+      } finally {
+        setIsProcessing(false);
+      }
     }
   };
 
   const sendRawData = async () => {
-    if (!transcript.trim()) return;
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    const token = await getToken();
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+    console.log("send raw data", isFree);
+    if (isFree) {
+      if (!transcript.trim()) return;
 
-    const currentTranscript = stopSpeechInterface();
+      const currentTranscript = stopSpeechInterface();
 
-    try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-      const token = await getToken();
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
+      try {
+        const response = await fetch(createApiUrl("/api/voice-log"), {
+          headers,
+          method: "POST",
+          body: JSON.stringify({ transcript: currentTranscript }),
+        });
+        const data = await response.json();
+
+        if (data.session) {
+          addLog(data.session);
+        }
+        if (data.metric) {
+          addMetric(data.metric);
+        }
+      } catch (error) {
+        console.error("Error logging voice data:", error);
+      } finally {
+        setIsProcessing(false);
       }
-
-      const response = await fetch(createApiUrl("/api/voice-log"), {
-        headers,
-        method: "POST",
-        body: JSON.stringify({ transcript: currentTranscript }),
-      });
-      const data = await response.json();
-
-      if (data.session) {
-        addLog(data.session);
+    } else {
+      if (!premiumTranscript.trim()) return;
+      setIsProcessing(true);
+      try {
+        const response = await fetch(createApiUrl("/api/voice-log"), {
+          headers,
+          method: "POST",
+          body: JSON.stringify({ transcript: premiumTranscript }),
+        });
+        const data = await response.json();
+        console.log(data);
+        if (data.session) {
+          addLog(data.session);
+        }
+        if (data.metric) {
+          addMetric(data.metric);
+        }
+        setIsProcessing(false);
+      } catch (error) {
+        console.error("Error logging voice data:", error);
+      } finally {
+        setIsProcessing(false);
       }
-      if (data.metric) {
-        addMetric(data.metric);
-      }
-    } catch (error) {
-      console.error("Error logging voice data:", error);
-    } finally {
-      setIsProcessing(false);
     }
   };
 
@@ -315,26 +363,28 @@ function VoiceLogPage() {
             disabled={!transcript.trim() || isProcessing}
             className="flex-1 disabled:opacity-50 disabled:cursor-not-allowed w-full"
           />
-          {
+
+          {isFree && (
             <div className="p-4 bg-gray-100 p-4 w-[350px] min-h-[80px] rounded-lg">
               <div className="text-sm text-gray-500 leading-relaxed overflow-y-auto">
                 {toProcess
                   ? toProcess
-                  : isFree
-                  ? "" + transcript || (
-                      <p>
-                        No Saved Log Found. <br /> Click mic to start speaking.
-                      </p>
-                    )
-                  : premiumTranscript || (
-                      <p>
-                        No Saved Log Found. <br /> Click mic to start speaking.
-                      </p>
-                    )}
+                  : transcript
+                  ? transcript
+                  : "Start Speaking!"}
               </div>
             </div>
-          }
+          )}
 
+          {!isFree && isPremium && (
+            <div className="rounded-lg">
+              <textarea
+                className="p-4 bg-gray-100 w-[350px] min-h-[80px] text-sm text-gray-500 leading-relaxed overflow-y-auto border-0 focus:ring-0 focus:outline-none rounded-lg"
+                value={premiumTranscript}
+                onChange={(e) => setPremiumTranscript(e.target.value)}
+              />
+            </div>
+          )}
           {/* Listening Indicator */}
 
           {/* Instructions */}

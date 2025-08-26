@@ -48,7 +48,6 @@ export const logVoicePremium = async (
   if (file) {
     const nodeBuffer: Buffer = file.buffer;
 
-    // Convert Buffer → Uint8Array (valid BlobPart)
     const uint8array = new Uint8Array(nodeBuffer);
 
     const blob = new Blob([uint8array], { type: file.mimetype });
