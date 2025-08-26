@@ -59,11 +59,11 @@ function Dashboard() {
     <>
       <SideBar />
 
-      <div className="3xl:ml-[300px]">
+      <div className="3xl:ml-[300px] min-h-screen flex flex-col">
         <div className="3xl:block hidden">
           <Navbar />
         </div>
-        <div className="main-container flex flex-col 3xl:flex-row justify-between gap-16 3xl:gap-0 m-auto p-0 ">
+        <div className="main-container flex flex-col 3xl:flex-row justify-between gap-16 3xl:gap-0 m-auto p-0 flex-grow">
           {renderMainContent()}
           {currentLocation === "dashboard" ? (
             <div className="3xl:hidden block">
