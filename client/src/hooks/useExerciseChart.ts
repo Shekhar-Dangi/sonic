@@ -17,7 +17,7 @@ export const useExerciseChart = (
 ): UseExerciseChartReturn => {
   const metricLabel =
     metricType === "weight"
-      ? "Weight (lbs)"
+      ? "Weight (kg)"
       : metricType === "duration"
       ? "Duration (hrs)"
       : "Reps";

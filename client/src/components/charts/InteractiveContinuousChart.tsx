@@ -17,7 +17,7 @@ export interface ChartConfig {
   title: string;
   xAxisKey: string; // Which field to use for X-axis (e.g., "date")
   yAxisKey: string; // Which field to use for Y-axis (e.g., "volume", "weight")
-  yAxisLabel: string; // Label for Y-axis (e.g., "Volume (lbs)", "Weight (lbs)")
+  yAxisLabel: string; // Label for Y-axis (e.g., "Volume (kg)", "Weight (kg)")
   lineColor?: string; // Color of the line (optional)
   lineName: string; // Name shown in legend (e.g., "Bench Press Volume")
   yAxisDomain?: [string | number, string | number]; // Custom Y-axis range (optional)

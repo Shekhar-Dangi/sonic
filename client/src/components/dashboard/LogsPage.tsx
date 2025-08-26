@@ -137,7 +137,7 @@ const LogsPage = () => {
                           </span>
                           <span className="ml-1">
                             {set.reps && `${set.reps} reps`}
-                            {set.weight && ` @ ${set.weight} lbs`}
+                            {set.weight && ` @ ${set.weight} kg`}
                             {set.duration && `${set.duration} hrs`}
                           </span>
                         </div>

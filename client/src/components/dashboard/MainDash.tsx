@@ -34,7 +34,7 @@ function MainDash() {
     {
       id: 1,
       title: "Volume",
-      subtitle: volume ? parseInt(volume.toString()) + " lbs" : "0 lbs",
+      subtitle: volume ? parseInt(volume.toString()) + " kg" : "0 kg",
     },
     {
       id: 2,
