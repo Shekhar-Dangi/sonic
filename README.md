@@ -6,7 +6,7 @@ Sonic lets you log workouts just by speaking. No typing, no fumbling with your p
 
 ## 🎥 See Sonic in Action
 
-[![Watch Sonic Demo](https://img.shields.io/badge/▶️-Watch%20Demo-red?style=for-the-badge&logo=youtube)](https://youtu.be/IN2hwlfNtHA)
+[![Watch Sonic Demo](https://img.shields.io/badge/-Watch%20Demo-red?style=for-the-badge&logo=youtube)](https://youtu.be/IN2hwlfNtHA)
 
 ## How Sonic Works
 
