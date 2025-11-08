@@ -95,7 +95,7 @@ export function useInsights() {
     } catch (err: unknown) {
       console.error("Error generating insights:", err);
       const errorMessage =
-        (err as any)?.response?.data?.message ||
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
         (err as Error).message ||
         "Failed to generate insights";
       setError(errorMessage);
