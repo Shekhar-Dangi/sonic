@@ -9,6 +9,7 @@ import logsRoute from "./routes/logs";
 import metricsRoute from "./routes/metrics";
 import voiceRoute from "./routes/voicelog";
 import usersRoute from "./routes/users";
+import insightsRoute from "./routes/insights";
 
 import { AuthenticatedRequest } from "./middleware/auth";
 
@@ -32,6 +33,7 @@ app.use("/api/logs", logsRoute);
 app.use("/api/metrics", metricsRoute);
 app.use("/api/voice-log", voiceRoute);
 app.use("/api/users", usersRoute);
+app.use("/api/insights", insightsRoute);
 
 // app.ws("/stream", (ws) => {
 //   console.log("WebSocket connected");

@@ -1,7 +1,7 @@
 import home from "../../assets/icons/home.svg";
 import logs from "../../assets/icons/logs.png";
 import insights from "../../assets/icons/insights.png";
-import settings from "../../assets/icons/settings.svg";
+
 import micIcon from "../../assets/icons/bmic.png";
 import SideBarFile from "./SideBarFile";
 
@@ -32,16 +32,16 @@ function SideBar() {
       icon: insights,
       location: "insights" as const,
     },
-    {
-      id: 4,
-      title: "Settings",
-      isFocused: currentLocation === "settings",
-      icon: settings,
-      location: "settings" as const,
-    },
+    // {
+    //   id: 4,
+    //   title: "Settings",
+    //   isFocused: currentLocation === "settings",
+    //   icon: settings,
+    //   location: "settings" as const,
+    // },
 
     {
-      id: 5,
+      id: 4,
       title: "Voice Log",
       isFocused: currentLocation === "voicelog",
       icon: micIcon,

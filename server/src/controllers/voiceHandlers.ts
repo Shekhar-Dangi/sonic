@@ -7,11 +7,11 @@ import {
   validateSchema,
   isUnifiedVoiceLogResponse,
   isStructuredGeminiError,
-  isSchemaValidationError
+  isSchemaValidationError,
 } from "../utils/structuredGemini";
 import {
   unifiedVoiceLogSchema,
-  unifiedVoicePrompt
+  unifiedVoicePrompt,
 } from "../utils/geminiSchemas";
 
 export async function handleUnifiedVoiceLog(
@@ -38,7 +38,10 @@ export async function handleUnifiedVoiceLog(
     };
 
     // Process workout data if present
-    if (validatedData.workout?.exercises && validatedData.workout.exercises.length > 0) {
+    if (
+      validatedData.workout?.exercises &&
+      validatedData.workout.exercises.length > 0
+    ) {
       try {
         const newSession = await prisma.workoutSession.create({
           data: {
@@ -82,13 +85,19 @@ export async function handleUnifiedVoiceLog(
     }
 
     // Process body metrics if present
-    if (validatedData.bodyMetrics && 
-        (validatedData.bodyMetrics.weight || validatedData.bodyMetrics.bodyFat || validatedData.bodyMetrics.muscleMass)) {
+    if (
+      validatedData.bodyMetrics &&
+      (validatedData.bodyMetrics.weight ||
+        validatedData.bodyMetrics.bodyFat ||
+        validatedData.bodyMetrics.muscleMass)
+    ) {
       try {
         const newMetric = await prisma.bodyMetric.create({
           data: {
             userId: req.authUserId!,
-            date: validatedData.bodyMetrics.date ? new Date(validatedData.bodyMetrics.date) : new Date(),
+            date: validatedData.bodyMetrics.date
+              ? new Date(validatedData.bodyMetrics.date)
+              : new Date(),
             weight: validatedData.bodyMetrics.weight
               ? parseFloat(validatedData.bodyMetrics.weight.toString())
               : null,
@@ -113,7 +122,8 @@ export async function handleUnifiedVoiceLog(
       res.status(400).json({
         success: false,
         error: "Could not understand the input. Please try again.",
-        suggestion: "Try saying something like: 'I did bench press, 3 sets of 8 reps at 185 pounds' or 'I weigh 175 pounds today'"
+        suggestion:
+          "Try saying something like: 'I did bench press, 3 sets of 8 reps at 185 pounds' or 'I weigh 175 pounds today'",
       });
       return;
     }
@@ -122,7 +132,7 @@ export async function handleUnifiedVoiceLog(
       res.status(500).json({
         success: false,
         error: "Failed to process voice input",
-        errors: results.errors
+        errors: results.errors,
       });
     } else {
       res.json({
@@ -135,13 +145,13 @@ export async function handleUnifiedVoiceLog(
     }
   } catch (error) {
     console.error("Error processing voice input:", error);
-    
+
     if (isStructuredGeminiError(error) || isSchemaValidationError(error)) {
       res.status(400).json({
         success: false,
         error: "Failed to understand the input",
         suggestion: "Please try rephrasing your input more clearly",
-        details: error.message
+        details: error.message,
       });
     } else {
       res.status(500).json({

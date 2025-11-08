@@ -289,11 +289,11 @@ function VoiceLogPage() {
       value: "free",
       disabled: false,
     },
-    {
-      label: "Premium",
-      value: "premium",
-      disabled: !isPremium,
-    },
+    // {
+    //   label: "Premium",
+    //   value: "premium",
+    //   disabled: !isPremium,
+    // },
   ];
 
   return (

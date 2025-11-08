@@ -16,6 +16,7 @@ model User {
   createdAt DateTime         @default(now())
   sessions  WorkoutSession[]
   metrics   BodyMetric[]
+  insights  UserInsight[]
   toProcess String?
   isPremium Boolean          @default(false)
 }
@@ -45,14 +46,14 @@ model Exercise {
 }
 
 model ExerciseSet {
-  id         String   @id @default(uuid())
-  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  id         String     @id @default(uuid())
+  exercise   Exercise   @relation(fields: [exerciseId], references: [id])
   exerciseId String
   reps       Int?
   weight     Float?
   distance   Float?
   duration   Float?
-  intensity  Int?
+  intensity  Intensity?
   note       String?
 }
 
@@ -74,6 +75,22 @@ model BodyMetric {
   weight     Float?
   bodyFat    Float?
   muscleMass Float?
+}
+
+model UserInsight {
+  id                 String   @id @default(uuid())
+  user               User     @relation(fields: [userId], references: [id])
+  userId             String
+  summary            String
+  achievements       Json
+  trends             Json
+  recommendations    Json
+  warnings           Json
+  nextSteps          Json
+  generatedAt        DateTime @default(now())
+  canRegenerateAfter DateTime
+
+  @@index([userId])
 }
 
 enum InsightType {

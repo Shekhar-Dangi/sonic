@@ -3,39 +3,57 @@ import { GoogleGenAI } from "@google/genai";
 const ai = new GoogleGenAI({});
 
 export type StructuredGeminiError = {
-  name: 'StructuredGeminiError';
+  name: "StructuredGeminiError";
   message: string;
   originalError?: unknown;
 };
 
 export type SchemaValidationError = {
-  name: 'SchemaValidationError';
+  name: "SchemaValidationError";
   message: string;
   receivedData?: unknown;
 };
 
-export function createStructuredGeminiError(message: string, originalError?: unknown): StructuredGeminiError {
+export function createStructuredGeminiError(
+  message: string,
+  originalError?: unknown
+): StructuredGeminiError {
   return {
-    name: 'StructuredGeminiError',
+    name: "StructuredGeminiError",
     message,
-    originalError
+    originalError,
   };
 }
 
-export function createSchemaValidationError(message: string, receivedData?: unknown): SchemaValidationError {
+export function createSchemaValidationError(
+  message: string,
+  receivedData?: unknown
+): SchemaValidationError {
   return {
-    name: 'SchemaValidationError',
+    name: "SchemaValidationError",
     message,
-    receivedData
+    receivedData,
   };
 }
 
-export function isStructuredGeminiError(error: unknown): error is StructuredGeminiError {
-  return typeof error === 'object' && error !== null && (error as any).name === 'StructuredGeminiError';
+export function isStructuredGeminiError(
+  error: unknown
+): error is StructuredGeminiError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    (error as any).name === "StructuredGeminiError"
+  );
 }
 
-export function isSchemaValidationError(error: unknown): error is SchemaValidationError {
-  return typeof error === 'object' && error !== null && (error as any).name === 'SchemaValidationError';
+export function isSchemaValidationError(
+  error: unknown
+): error is SchemaValidationError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    (error as any).name === "SchemaValidationError"
+  );
 }
 
 /**
@@ -59,7 +77,9 @@ export async function callStructuredGemini<T>(
     });
 
     if (!response.text) {
-      throw createStructuredGeminiError("No response text received from Gemini");
+      throw createStructuredGeminiError(
+        "No response text received from Gemini"
+      );
     }
 
     let parsedResponse: T;
@@ -73,7 +93,7 @@ export async function callStructuredGemini<T>(
     }
 
     // Basic validation that we received an object
-    if (typeof parsedResponse !== 'object' || parsedResponse === null) {
+    if (typeof parsedResponse !== "object" || parsedResponse === null) {
       throw createSchemaValidationError(
         "Response is not a valid object",
         parsedResponse
@@ -115,13 +135,15 @@ export function isClassificationResponse(data: unknown): data is {
   confidence: number;
 } {
   return (
-    typeof data === 'object' &&
+    typeof data === "object" &&
     data !== null &&
-    'intent' in data &&
-    'confidence' in data &&
-    typeof (data as any).intent === 'string' &&
-    ['WORKOUT_LOG', 'BODY_METRIC', 'MIXED', 'UNCLEAR'].includes((data as any).intent) &&
-    typeof (data as any).confidence === 'number' &&
+    "intent" in data &&
+    "confidence" in data &&
+    typeof (data as any).intent === "string" &&
+    ["WORKOUT_LOG", "BODY_METRIC", "MIXED", "UNCLEAR"].includes(
+      (data as any).intent
+    ) &&
+    typeof (data as any).confidence === "number" &&
     (data as any).confidence >= 0 &&
     (data as any).confidence <= 1
   );
@@ -147,23 +169,26 @@ export function isWorkoutLogResponse(data: unknown): data is {
   note?: string | null;
 } {
   return (
-    typeof data === 'object' &&
+    typeof data === "object" &&
     data !== null &&
-    'parsedJson' in data &&
-    typeof (data as any).parsedJson === 'object' &&
+    "parsedJson" in data &&
+    typeof (data as any).parsedJson === "object" &&
     (data as any).parsedJson !== null &&
-    'exercises' in (data as any).parsedJson &&
+    "exercises" in (data as any).parsedJson &&
     Array.isArray((data as any).parsedJson.exercises) &&
     (data as any).parsedJson.exercises.length > 0 &&
-    (data as any).parsedJson.exercises.every((exercise: any) =>
-      typeof exercise === 'object' &&
-      exercise !== null &&
-      typeof exercise.name === 'string' &&
-      typeof exercise.category === 'string' &&
-      ['strength', 'cardio', 'mobility', 'custom'].includes(exercise.category) &&
-      typeof exercise.isCustom === 'boolean' &&
-      Array.isArray(exercise.sets) &&
-      exercise.sets.length > 0
+    (data as any).parsedJson.exercises.every(
+      (exercise: any) =>
+        typeof exercise === "object" &&
+        exercise !== null &&
+        typeof exercise.name === "string" &&
+        typeof exercise.category === "string" &&
+        ["strength", "cardio", "mobility", "custom"].includes(
+          exercise.category
+        ) &&
+        typeof exercise.isCustom === "boolean" &&
+        Array.isArray(exercise.sets) &&
+        exercise.sets.length > 0
     )
   );
 }
@@ -176,13 +201,17 @@ export function isBodyMetricResponse(data: unknown): data is {
   note?: string | null;
 } {
   return (
-    typeof data === 'object' &&
+    typeof data === "object" &&
     data !== null &&
-    (
-      ('weight' in data && (typeof (data as any).weight === 'number' || (data as any).weight === null)) ||
-      ('bodyFat' in data && (typeof (data as any).bodyFat === 'number' || (data as any).bodyFat === null)) ||
-      ('muscleMass' in data && (typeof (data as any).muscleMass === 'number' || (data as any).muscleMass === null))
-    )
+    (("weight" in data &&
+      (typeof (data as any).weight === "number" ||
+        (data as any).weight === null)) ||
+      ("bodyFat" in data &&
+        (typeof (data as any).bodyFat === "number" ||
+          (data as any).bodyFat === null)) ||
+      ("muscleMass" in data &&
+        (typeof (data as any).muscleMass === "number" ||
+          (data as any).muscleMass === null)))
   );
 }
 
@@ -213,21 +242,65 @@ export function isUnifiedVoiceLogResponse(data: unknown): data is {
   } | null;
 } {
   return (
-    typeof data === 'object' &&
+    typeof data === "object" &&
     data !== null &&
-    (
-      !('workout' in data) || 
-      (data as any).workout === null || 
-      (typeof (data as any).workout === 'object' && (
-        !('exercises' in (data as any).workout) || 
-        (data as any).workout.exercises === null || 
-        Array.isArray((data as any).workout.exercises)
-      ))
+    (!("workout" in data) ||
+      (data as any).workout === null ||
+      (typeof (data as any).workout === "object" &&
+        (!("exercises" in (data as any).workout) ||
+          (data as any).workout.exercises === null ||
+          Array.isArray((data as any).workout.exercises)))) &&
+    (!("bodyMetrics" in data) ||
+      (data as any).bodyMetrics === null ||
+      typeof (data as any).bodyMetrics === "object")
+  );
+}
+
+export function isInsightsResponse(data: unknown): data is {
+  summary: string;
+  achievements: string[];
+  trends: {
+    volume?: string | null;
+    frequency?: string | null;
+    bodyComposition?: string | null;
+  };
+  recommendations: Array<{
+    priority: "high" | "medium" | "low";
+    action: string;
+    reasoning: string;
+  }>;
+  warnings: string[];
+  nextSteps: string[];
+} {
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    "summary" in data &&
+    typeof (data as any).summary === "string" &&
+    "achievements" in data &&
+    Array.isArray((data as any).achievements) &&
+    (data as any).achievements.length >= 3 &&
+    (data as any).achievements.every((item: any) => typeof item === "string") &&
+    "trends" in data &&
+    typeof (data as any).trends === "object" &&
+    "recommendations" in data &&
+    Array.isArray((data as any).recommendations) &&
+    (data as any).recommendations.length >= 2 &&
+    (data as any).recommendations.every(
+      (rec: any) =>
+        typeof rec === "object" &&
+        rec !== null &&
+        typeof rec.priority === "string" &&
+        ["high", "medium", "low"].includes(rec.priority) &&
+        typeof rec.action === "string" &&
+        typeof rec.reasoning === "string"
     ) &&
-    (
-      !('bodyMetrics' in data) || 
-      (data as any).bodyMetrics === null || 
-      typeof (data as any).bodyMetrics === 'object'
-    )
+    "warnings" in data &&
+    Array.isArray((data as any).warnings) &&
+    (data as any).warnings.every((item: any) => typeof item === "string") &&
+    "nextSteps" in data &&
+    Array.isArray((data as any).nextSteps) &&
+    (data as any).nextSteps.length >= 3 &&
+    (data as any).nextSteps.every((item: any) => typeof item === "string")
   );
 }
